@@ -1,0 +1,7 @@
+.card-body .table tr:first-child td {
+    border-top: 0;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
