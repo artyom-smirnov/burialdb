@@ -9,7 +9,7 @@
                 <table class="table table-hover mb-0">
                     <tbody>
                     {% for cemetery in cemetery_list %}
-                        <tr class="clickable-row" data-href="{% url 'cemetery_details' cemetery.id %}"><td>{{ cemetery.name }}</td></tr>
+                        <tr class="clickable-row" data-href="{% url 'cemetery_detail' cemetery.id %}"><td>{{ cemetery.name }}</td></tr>
                     {% endfor %}
                     </tbody>
                 </table>

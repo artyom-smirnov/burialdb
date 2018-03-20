@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Cemetery(models.Model):
@@ -22,11 +23,16 @@ class Hospital(models.Model):
 
 
 class Person(models.Model):
-    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL)
-    hospital = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL)
+    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Захоронение')
+    cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное захоронение')
 
-    fio = models.CharField(max_length=255, blank=True)
-    actual_fio = models.CharField(max_length=255, blank=True)
+    hospital = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital', verbose_name='Госпиталь')
+    hospital_actual = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital_actual', verbose_name='Актуальный госпиталь')
+
+    fio = models.CharField(max_length=255, blank=True, verbose_name='ФИО')
+    fio_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальные ФИО')
+
+    notes = models.TextField(blank=True, verbose_name='Примечания')
 
     class Meta:
         ordering = ["fio"]
@@ -35,9 +41,12 @@ class Person(models.Model):
         return self.name()
 
     def name(self):
-        if self.actual_fio:
-            return self.actual_fio
+        if self.fio_actual:
+            return self.fio_actual
         elif self.fio:
             return self.fio
         else:
             return 'Неизвестный'
+
+    def get_absolute_url(self):
+        return reverse('person_detail', kwargs={'pk': self.pk})

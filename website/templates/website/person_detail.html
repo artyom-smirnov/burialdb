@@ -3,19 +3,51 @@
 {% block content %}
     <div class="card mt-2 mb-2">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="d-inline-block">{{ person.name }}</h3><i class="fa fa-2x fa-edit"></i>
+            <h3 class="d-inline-block">{{ person.name }}</h3>
+            <div>
+                <a class="text-info mr-2" href="{% url 'person_edit' person.id %}"><i class="fa fa-2x fa-edit"></i></a>
+                <a class="text-danger" href="{% url 'person_delete' person.id %}"><i class="fa fa-2x fa-trash"></i></a>
+            </div>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <tbody>
-                {% for person in person_list %}
-                    <tr class="clickable-row" data-href="{% url 'person_detail' person.id %}">
-                        <td>{% if person.fio %}{{ person.fio }}{% else %}Неизвестный{% endif %}</td>
+            <table class="table table-hover table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th scope="col">По документам</th>
+                        <th scope="col">Актуальная информация</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">ФИО</th>
+                        <td>{% if person.fio %}{{ person.fio }}{% else %}-{% endif %}</td>
+                        <td>{% if person.fio_actual %}{{ person.fio_actual }}{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Госпиталь</th>
+                        <td>{% if person.hospital %}<a href="{% url 'hospital_detail' person.hospital.id %}">{{ person.hospital.name }}</a>{% else %}-{% endif %}</td>
+                        <td>{% if person.hospital_actual %}<a href="{% url 'hospital_detail' person.hospital_actual.id %}">{{ person.hospital_actual.name }}</a>{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Захоронение</th>
+                        <td>{% if person.cemetery %}<a href="{% url 'cemetery_detail' person.cemetery.id %}">{{ person.cemetery.name }}</a>{% else %}-{% endif %}</td>
+                        <td>{% if person.cemetery_actual %}<a href="{% url 'cemetery_detail' person.cemetery_actual.id %}">{{ person.cemetery_actual.name }}</a>{% else %}-{% endif %}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    {% if person.notes %}
+    <div class="card mt-2 mb-2">
+        <div class="card-header"><h4>Примечания</h4></div>
+        <div class="card-body">
+            <div class="card-text mb-0">
+                <pre class="mb-0">{{ person.notes }}</pre>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

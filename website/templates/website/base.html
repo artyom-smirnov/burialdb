@@ -25,13 +25,16 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item {% if navbar == 'burials' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'burials' %}">Захоронения</a>
+                    <a class="nav-link" href="{% url 'cemeteries' %}">Захоронения</a>
                   </li>
                   <li class="nav-item {% if navbar == 'hospitals' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'hospitals' %}">Госпитали</a>
                   </li>
                   <li class="nav-item {% if navbar == 'persons' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'persons' %}">Люди</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'person_create' %}"><i class="fa fa-plus"></i></a>
                   </li>
                 </ul>
               </div>
