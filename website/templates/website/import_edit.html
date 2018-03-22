@@ -1,0 +1,87 @@
+{% extends "website/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="card mt-2">
+    <div class="card-header"><h3>Настройка импорта</h3></div>
+    <div class="card-body">
+        <div class="card-text">{% crispy form %}</div>
+    </div>
+</div>
+
+<div class="card mt-2 mb-2">
+    <div class="card-header"><h3>Данные для импорта</h3></div>
+    <form action="{% url 'import_do' import.id %}" method="post">{% csrf_token %}
+        <div class="card-body p-0">
+            <table class="table table-responsive">
+                {% if import_header %}
+                <thead>
+                    {% for row in import_header %}
+                        <tr>
+                            {% for col in row %}
+                                <th scope="col">
+                                    {{ col }}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        {% for _ in numbering %}
+                            <th scope="col"></th>
+                        {% endfor %}
+                        {% for _ in data_cols %}
+                            <th scope="col">
+                                <select class="form-control form-control-sm" name="column_{{ forloop.counter0 }}">
+                                    <option value="">---</option>
+                                    {% for k, v in data_mapping.items %}
+                                        <option value="{{ k }}" {% if forloop.counter == forloop.parentloop.counter %}selected{% endif %}>{{ v }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                {% endif %}
+                {% if import_data %}
+                    {% for row in import_data %}
+                        <tr>
+                            {% for data in row %}
+                                {% if forloop.counter == 1 %}
+                                    {% for col in data %}
+                                        <th scope="row">
+                                            {{ col }}
+                                        </th>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for col in data %}
+                                        <td scope="row">
+                                            {{ col }}
+                                        </td>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+        <div class="card-body pt-0">
+            <div class="card-text">
+                <input type="submit" class="btn btn-primary" value="Импортировать">
+            </div>
+        </div>
+    </form>
+    {% if data_len > 0 %}
+    <div class="card-footer">
+        Показывается {{ data_show_len }} строк из {{ data_len }}.
+        {% if data_len > data_show_len %}
+            <a href="{% url 'import_update' import.id %}?show_all">Показать все.</a>
+        {% else %}
+            <a href="{% url 'import_update' import.id %}">Показать меньше.</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

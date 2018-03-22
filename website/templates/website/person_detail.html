@@ -26,6 +26,11 @@
                         <td>{% if person.fio_actual %}{{ person.fio_actual }}{% else %}-{% endif %}</td>
                     </tr>
                     <tr>
+                        <th scope="row">Год рождения</th>
+                        <td>{% if person.year %}{{ person.year }}{% else %}-{% endif %}</td>
+                        <td>{% if person.year_actual %}{{ person.year_actual }}{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
                         <th scope="row">Госпиталь</th>
                         <td>{% if person.hospital %}<a href="{% url 'hospital_detail' person.hospital.id %}">{{ person.hospital.name }}</a>{% else %}-{% endif %}</td>
                         <td>{% if person.hospital_actual %}<a href="{% url 'hospital_detail' person.hospital_actual.id %}">{{ person.hospital_actual.name }}</a>{% else %}-{% endif %}</td>

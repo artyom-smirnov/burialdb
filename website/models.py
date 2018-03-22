@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
 
@@ -32,7 +34,12 @@ class Person(models.Model):
     fio = models.CharField(max_length=255, blank=True, verbose_name='ФИО')
     fio_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальные ФИО')
 
+    year = models.CharField(max_length=50, null=True, blank=True, verbose_name='Год рождения')
+    year_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный год рождения')
+
     notes = models.TextField(blank=True, verbose_name='Примечания')
+
+    _mapped_fields = ['fio', 'year']
 
     class Meta:
         ordering = ["fio"]
@@ -50,3 +57,23 @@ class Person(models.Model):
 
     def get_absolute_url(self):
         return reverse('person_detail', kwargs={'pk': self.pk})
+
+    @classmethod
+    def get_mapped_fields(cls):
+        return cls._mapped_fields
+
+
+class Import(models.Model):
+    name = models.CharField(max_length=255, default='import-%s' % datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+    cemetery = models.ForeignKey(Cemetery, on_delete=models.CASCADE, verbose_name='Захоронение')
+    file = models.FileField(upload_to='import/', verbose_name='Файл для импорта')
+    header = models.IntegerField(default=1, verbose_name='Строки заголовка')
+    numbering = models.IntegerField(default=1, verbose_name='Колонки нумерации')
+    delimiter = models.CharField(max_length=1, default=',', verbose_name='Разделитель')
+    quotechar = models.CharField(max_length=1, default='"', verbose_name='Символ строки')
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('import_update', kwargs={'pk': self.pk})
