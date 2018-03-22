@@ -226,6 +226,7 @@ class ImportDoView(FormMixin, BaseDetailView):
     form_class = ImportDoForm
     csv_data = None
     data_cols = 0
+    http_method_names = ['post']
 
     def import_data(self, request, *args, **kwargs):
         obj = self.get_object()
