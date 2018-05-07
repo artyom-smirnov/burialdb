@@ -19,7 +19,6 @@ PAGINATE_BY = 10
 
 
 class CommonViewMixin(object):
-    paginate_by = PAGINATE_BY
     page_title = 'Untitled'
     navbar = None
 
@@ -34,11 +33,15 @@ class CommonViewMixin(object):
         return context
 
 
-class BaseListView(CommonViewMixin, ListView):
+class CommonPaginatedViewMixin(CommonViewMixin):
+    paginate_by = PAGINATE_BY
+
+
+class BaseListView(CommonPaginatedViewMixin, ListView):
     pass
 
 
-class DetailWithListView(CommonViewMixin, DetailView):
+class DetailWithListView(CommonPaginatedViewMixin, DetailView):
     list_model = None
 
     def get_list_queryset(self):
