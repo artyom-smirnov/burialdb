@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import BaseDetailView
 from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
+from django.db import transaction
 
 from website.forms import PersonCreateForm, ImportCreateForm, ImportUpdateForm, ImportDoForm
 from website.models import Person, Cemetery, Hospital, Import
@@ -219,8 +220,9 @@ class ImportView(CommonViewMixin, UpdateView):
         context['import_data'] = data[:show_max]
         context['data_len'] = len(data)
         context['data_show_len'] = show_max
+        context['added_hospitals'] = Hospital.objects.filter(active_import=obj)
+        context['added_persons'] = Person.objects.filter(active_import=obj)
 
-        print(data)
         return context
 
 
@@ -233,24 +235,26 @@ class ImportDoView(FormMixin, BaseDetailView):
 
     def import_data(self, request, *args, **kwargs):
         obj = self.get_object()
-        print(obj)
         form = self.get_form()
         data_mapping = {}
+        persons = []
         if form.is_valid():
             for i in range(self.data_cols):
                 field_name = form.cleaned_data['column_%s' % i]
-                if (field_name):
+                if field_name:
                     if field_name not in data_mapping:
                         data_mapping[field_name] = i
             for row in self.csv_data:
+                person = Person()
                 for field, col in data_mapping.items():
                     val = row[1][col]
-                    person = Person()
-                    person.__setattr__(field, val)
-                    person.save()
-                    break
-                    # print('field %s = %s' % (field, row[1][col]))
+                    person.__setattr__(field, Person.translate_mapped_field_value(field, val, obj))
+                    person.active_import = obj
+                persons.append(person)
 
+        Person.objects.bulk_create(persons)
+        obj.data_added = True
+        obj.save()
         # """
         # Call the delete() method on the fetched object and then redirect to the
         # success URL.
@@ -258,11 +262,11 @@ class ImportDoView(FormMixin, BaseDetailView):
         # self.object = self.get_object()
         # success_url = self.get_success_url()
         # self.object.delete()
-        # return HttpResponseRedirect('/')
-        return
+        return HttpResponseRedirect(obj.get_absolute_url())
 
     def post(self, request, *args, **kwargs):
-        return self.import_data(request, *args, **kwargs)
+        with transaction.atomic():
+            return self.import_data(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
