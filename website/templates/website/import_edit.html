@@ -17,7 +17,7 @@
     <div class="card-header"><h3>Данные для импорта</h3></div>
     <form action="{% url 'import_do' import.id %}" method="post">{% csrf_token %}
         <div class="card-body p-0">
-            <table class="table table-responsive">
+            <table class="table table-sm table-responsive">
                 {% if import_header %}
                 <thead>
                     {% for row in import_header %}
@@ -31,7 +31,7 @@
                     {% endfor %}
                     <tr>
                         {% for _ in numbering %}
-                            <th scope="col"></th>
+                            <th scope="col">Поля</th>
                         {% endfor %}
                         {% for _ in data_cols %}
                             <th scope="col">
