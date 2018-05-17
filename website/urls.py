@@ -13,6 +13,7 @@ urlpatterns = [
     path('persons/import/', website_views.ImportCreateView.as_view(), name='person_import'),
     path('persons/import/<int:pk>/edit/', website_views.ImportView.as_view(), name='import_update'),
     path('persons/import/<int:pk>/do/', website_views.ImportDoView.as_view(), name='import_do'),
+    path('persons/import/<int:pk>/apply_or_undo/', website_views.ImportApplyOrUndoView.as_view(), name='import_apply_or_undo'),
     path('persons/<int:pk>/edit/', website_views.PersonEditView.as_view(), name='person_edit'),
     path('persons/<int:pk>/delete/', website_views.PersonDeleteView.as_view(), name='person_delete'),
     path('persons/<int:pk>/', website_views.PersonDetailView.as_view(), name='person_detail'),

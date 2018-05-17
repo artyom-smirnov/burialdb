@@ -111,6 +111,11 @@
                 </ul>
             {% endif %}
         {% endif %}
+
+        <form action="{% url 'import_apply_or_undo' import.id %}" method="post">{% csrf_token %}
+            <button type="submit" class="btn btn-primary" name="action" value="apply">Сохранить</button>
+            <button type="submit" class="btn btn-danger" name="action" value="undo">Отменить</button>
+        </form>
     </div>
 </div>
 {% endif %}

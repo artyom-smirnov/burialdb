@@ -4,10 +4,11 @@ from collections import OrderedDict
 from django.core import paginator
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.views.generic.detail import BaseDetailView
+from django.views.generic.detail import BaseDetailView, SingleObjectMixin
 from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
 from django.db import transaction
 
@@ -252,6 +253,7 @@ class ImportDoView(FormMixin, BaseDetailView):
                         data_mapping[field_name] = i
             for row in self.csv_data:
                 person = Person()
+                person.cemetery = obj.cemetery
                 for field, col in data_mapping.items():
                     val = row[1][col]
                     person.__setattr__(field, Person.translate_mapped_field_value(field, val, obj))
@@ -280,3 +282,21 @@ class ImportDoView(FormMixin, BaseDetailView):
             _, self.csv_data, self.data_cols = load_csv(self.get_object())
         kwargs['columns_count'] = self.data_cols
         return kwargs
+
+
+class ImportApplyOrUndoView(View):
+    def post(self, request, pk):
+        obj = get_object_or_404(Import, id=pk)
+        action = request.POST['action']
+        if action == 'undo':
+            with transaction.atomic():
+                Person.objects.filter(active_import=obj).delete()
+                Hospital.objects.filter(active_import=obj).delete()
+                obj.data_added = False
+                obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        elif action == 'apply':
+            obj.delete()
+            return HttpResponseRedirect(reverse_lazy('person_import'))
+
+        return HttpResponseRedirect(obj.get_absolute_url())
