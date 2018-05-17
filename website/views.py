@@ -92,7 +92,7 @@ class CemeteryDetailView(DetailWithListView):
 
     def get_list_queryset(self):
         obj = super().get_object()
-        return Person.objects.filter(Q(cemetery=obj) | Q(cemetery_actual=obj))
+        return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj)))
 
 
 class HospitalsView(BaseListView):
@@ -100,6 +100,9 @@ class HospitalsView(BaseListView):
     context_object_name = 'hospital_list'
     page_title = 'Госпитали'
     navbar = 'hospitals'
+
+    def get_queryset(self):
+        return Hospital.objects.filter(active_import=None)
 
 
 class HospitalDetailView(DetailWithListView):
@@ -121,6 +124,9 @@ class PersonsView(BaseListView):
     context_object_name = 'person_list'
     navbar = 'persons'
     page_title = 'Люди'
+
+    def get_queryset(self):
+        return Person.objects.filter(active_import=None)
 
 
 class PersonDetailView(CommonViewMixin, DetailView):
