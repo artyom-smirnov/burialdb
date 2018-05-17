@@ -14,8 +14,12 @@ class Cemetery(models.Model):
         return self.name
 
 
+def default_import_name():
+    return 'import-%s' % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+
 class Import(models.Model):
-    name = models.CharField(max_length=255, default='import-%s' % datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+    name = models.CharField(max_length=255, default=default_import_name)
     cemetery = models.ForeignKey(Cemetery, on_delete=models.CASCADE, verbose_name='Захоронение')
     file = models.FileField(upload_to='import/', verbose_name='Файл для импорта')
     header = models.IntegerField(default=1, verbose_name='Строки заголовка')
