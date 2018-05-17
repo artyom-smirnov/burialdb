@@ -156,7 +156,7 @@ class PersonCreateView(CommonViewMixin, CreateView):
     model = Person
     template_name_suffix = '_create'
     form_class = PersonCreateForm
-    navbar = 'persons'
+    navbar = 'person_create'
     page_title = 'Добавление нового человека'
 
 
@@ -183,7 +183,7 @@ class ImportCreateView(CommonViewMixin, CreateView):
     model = Import
     template_name_suffix = '_create'
     form_class = ImportCreateForm
-    navbar = 'persons'
+    navbar = 'person_import'
     page_title = 'Импорт из файла'
 
     def get_context_data(self, **kwargs):
@@ -219,7 +219,7 @@ class ImportView(CommonViewMixin, UpdateView):
     form_class = ImportUpdateForm
     context_object_name = 'import'
     template_name_suffix = '_edit'
-    navbar = 'import'
+    navbar = 'person_import'
     page_title = 'Импорт из файла'
 
     def get_context_data(self, **kwargs):
