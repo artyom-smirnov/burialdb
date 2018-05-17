@@ -138,6 +138,19 @@ class PersonDetailView(CommonViewMixin, DetailView):
     def get_page_title(self):
         return super().get_object().name()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        person = super().get_object()
+        person_card_pair_values = []
+        for f, a_f in Person.get_pair_card_fields():
+            caption = Person._meta.get_field(f).verbose_name
+            val = getattr(person, f)
+            a_val = getattr(person, a_f)
+            person_card_pair_values.append(
+                {'caption': caption, 'data': val, 'actual_data': a_val}
+            )
+        context['person_card_pair_values'] = person_card_pair_values
+        return context
 
 class PersonCreateView(CommonViewMixin, CreateView):
     model = Person
@@ -263,13 +276,7 @@ class ImportDoView(FormMixin, BaseDetailView):
         Person.objects.bulk_create(persons)
         obj.data_added = True
         obj.save()
-        # """
-        # Call the delete() method on the fetched object and then redirect to the
-        # success URL.
-        # """
-        # self.object = self.get_object()
-        # success_url = self.get_success_url()
-        # self.object.delete()
+
         return HttpResponseRedirect(obj.get_absolute_url())
 
     def post(self, request, *args, **kwargs):

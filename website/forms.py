@@ -13,37 +13,43 @@ class PersonCreateForm(forms.ModelForm):
         super(PersonCreateForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.render_unmentioned_fields = True
-        self.helper.layout = Layout(
-            Div(
-                Div('fio', css_class='col-6'),
-                Div('fio_actual', css_class='col-6'),
-                css_class='row'
-            ),
-            Div(
-                Div('year', css_class='col-6'),
-                Div('year_actual', css_class='col-6'),
-                css_class='row'
-            ),
-            Div(
-                Div('hospital', css_class='col-6'),
-                Div('hospital_actual', css_class='col-6'),
-                css_class='row'
-            ),
-            Div(
-                Div('cemetery', css_class='col-6'),
-                Div('cemetery_actual', css_class='col-6'),
-                css_class='row'
-            ),
-            Div(
-                Div('notes', css_class='col-12'),
-                css_class='row'
-            ),
-            Submit('submit', _('Сохранить'), css_class='btn btn-primary'),
-        )
+
+        fields = [
+            'fio',
+            'year',
+            'born_region',
+            'born_address',
+            'conscription_place',
+            'military_unit',
+            'rank',
+            'position',
+            'address',
+            'relatives',
+            'hospital',
+            'receipt_date',
+            'receipt_cause',
+            'death_date',
+            'death_cause',
+            'grave',
+            'cemetery'
+        ]
+
+        fields = Person.get_pair_card_fields()
+        layout = Layout()
+        for f, f_actual in fields:
+            layout.append(
+                Div(
+                    Div(f, css_class='col-md-6'),
+                    Div(f_actual, css_class='col-md-6'),
+                    css_class='row')
+            )
+        layout.append(Div(Div('notes', css_class='col-12'),css_class='row'))
+        layout.append(Submit('submit', _('Сохранить'), css_class='btn btn-primary'))
+        self.helper.layout = layout
 
     class Meta:
         model = Person
-        fields = '__all__'
+        exclude = ['active_import']
 
 
 class ImportCreateForm(forms.ModelForm):

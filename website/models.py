@@ -45,8 +45,8 @@ class Hospital(models.Model):
 class Person(models.Model):
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
 
-    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Захоронение')
-    cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное захоронение')
+    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Кладбище')
+    cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное кладбище')
 
     hospital = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital', verbose_name='Госпиталь')
     hospital_actual = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital_actual', verbose_name='Актуальный госпиталь')
@@ -82,19 +82,19 @@ class Person(models.Model):
     relatives_actual = models.CharField(max_length=1024, blank=True, verbose_name='Актуальные родственники')
 
     receipt_date = models.CharField(max_length=50, blank=True, verbose_name='Дата поступления')
-    receipt_date_actual = models.DateTimeField(null=True, verbose_name='Актуальная дата поступления')
+    receipt_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата поступления')
 
     receipt_cause = models.CharField(max_length=255, blank=True, verbose_name='Причина поступления')
     receipt_cause_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная причина поступления')
 
     death_date = models.CharField(max_length=255, blank=True, verbose_name='Дата смерти')
-    death_date_actual = models.DateTimeField(null=True, verbose_name='Актуальная дата смерти')
+    death_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата смерти')
 
     death_cause = models.CharField(max_length=255, blank=True, verbose_name='Причина смерти')
     death_cause_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная причина смерти')
 
     grave = models.CharField(max_length=50, blank=True, verbose_name='Номер могилы')
-    grave_actual = models.IntegerField(null=True, verbose_name='Актуальный номер могилы')
+    grave_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный номер могилы')
 
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
@@ -117,6 +117,9 @@ class Person(models.Model):
         'grave'
     ]
 
+    _pair_card_fields = _mapped_fields + ['cemetery']
+    _other_card_fields = ['notes']
+
     class Meta:
         ordering = ["fio"]
 
@@ -137,6 +140,14 @@ class Person(models.Model):
     @classmethod
     def get_mapped_fields(cls):
         return cls._mapped_fields
+
+    @classmethod
+    def get_pair_card_fields(cls):
+        return [(x, x + '_actual') for x in cls._pair_card_fields]
+
+    @classmethod
+    def get_other_card_fields(cls):
+        return cls._other_card_fields
 
     @classmethod
     def translate_mapped_field_value(cls, field_name, value, active_import=None):

@@ -11,7 +11,7 @@
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-hover table-striped mb-0">
+            <table class="table table-sm table-hover table-striped mb-0">
                 <thead>
                     <tr>
                         <th></th>
@@ -20,26 +20,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">ФИО</th>
-                        <td>{% if person.fio %}{{ person.fio }}{% else %}-{% endif %}</td>
-                        <td>{% if person.fio_actual %}{{ person.fio_actual }}{% else %}-{% endif %}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Год рождения</th>
-                        <td>{% if person.year %}{{ person.year }}{% else %}-{% endif %}</td>
-                        <td>{% if person.year_actual %}{{ person.year_actual }}{% else %}-{% endif %}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Госпиталь</th>
-                        <td>{% if person.hospital %}<a href="{% url 'hospital_detail' person.hospital.id %}">{{ person.hospital.name }}</a>{% else %}-{% endif %}</td>
-                        <td>{% if person.hospital_actual %}<a href="{% url 'hospital_detail' person.hospital_actual.id %}">{{ person.hospital_actual.name }}</a>{% else %}-{% endif %}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Захоронение</th>
-                        <td>{% if person.cemetery %}<a href="{% url 'cemetery_detail' person.cemetery.id %}">{{ person.cemetery.name }}</a>{% else %}-{% endif %}</td>
-                        <td>{% if person.cemetery_actual %}<a href="{% url 'cemetery_detail' person.cemetery_actual.id %}">{{ person.cemetery_actual.name }}</a>{% else %}-{% endif %}</td>
-                    </tr>
+                    {% for row in person_card_pair_values %}
+                        <tr>
+                            <th scope="row">{{ row.caption }}</th>
+                            <td>{% if row.data %}{{ row.data }}{% else %}-{% endif %}</td>
+                            <td>{% if row.actual_data %}{{ row.actual_data }}{% else %}-{% endif %}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
