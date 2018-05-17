@@ -143,8 +143,8 @@ class Person(models.Model):
         if field_name == 'hospital':
             value = value.strip()
             if value:
-                hospital, _ = Hospital.objects.get_or_create(name=value)
-                if active_import:
+                hospital, created = Hospital.objects.get_or_create(name=value)
+                if active_import and created:
                     hospital.active_import = active_import
                     hospital.save()
                 return hospital
