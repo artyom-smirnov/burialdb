@@ -90,22 +90,26 @@
 <div class="card mt-2">
     <div class="card-header"><h3>Импорт завершен</h3></div>
     <div class="card-body">
-        <h4>Добавленные госпитали</h4>
         {% if added_hospitals %}
-            <ul class="list-unstyled">
-            {% for hospital in added_hospitals %}
-                <li><a href="{% url 'hospital_detail' hospital.id %}">{{ hospital }}</a></li>
-            {% endfor %}
-            </ul>
+            <h4>Добавленные госпитали</h4>
+            {% if added_hospitals %}
+                <ul class="list-unstyled">
+                {% for hospital in added_hospitals %}
+                    <li><a href="{% url 'hospital_detail' hospital.id %}">{{ hospital }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
         {% endif %}
 
-        <h4>Добавленные люди</h4>
         {% if added_persons %}
-            <ul class="list-unstyled">
-            {% for person in added_persons %}
-                <li><a href="{% url 'person_detail' person.id %}">{{ person }}</a></li>
-            {% endfor %}
-            </ul>
+            <h4>Добавленные люди</h4>
+            {% if added_persons %}
+                <ul class="list-unstyled">
+                {% for person in added_persons %}
+                    <li><a href="{% url 'person_detail' person.id %}">{{ person }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
         {% endif %}
     </div>
 </div>
