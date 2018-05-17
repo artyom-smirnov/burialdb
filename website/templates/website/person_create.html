@@ -3,5 +3,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-{% crispy form %}
+<div class="card mt-2 mb-2">
+    <div class="card-header"><h3>Добавление человека</h3></div>
+    <div class="card-body">
+        {% crispy form %}
+    </div>
+</div>
 {% endblock %}
