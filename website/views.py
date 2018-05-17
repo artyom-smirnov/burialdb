@@ -186,6 +186,11 @@ class ImportCreateView(CommonViewMixin, CreateView):
     navbar = 'persons'
     page_title = 'Импорт из файла'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['imports'] = Import.objects.all().order_by('name')
+        return context
+
 
 def load_csv(import_obj):
     cvs_file = import_obj.file.path
