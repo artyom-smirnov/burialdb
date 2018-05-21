@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import django_heroku
 import dj_database_url
 
 
@@ -128,6 +127,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'burialdb', 'static'),
     os.path.join(BASE_DIR, 'website', 'static')
@@ -139,4 +140,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-django_heroku.settings(locals())
+try:
+    from burialdb.local_settings import *
+except ImportError:
+    pass
