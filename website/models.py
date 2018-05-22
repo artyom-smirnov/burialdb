@@ -20,7 +20,7 @@ def default_import_name():
 
 class Import(models.Model):
     name = models.CharField(max_length=255, default=default_import_name)
-    cemetery = models.ForeignKey(Cemetery, on_delete=models.CASCADE, verbose_name='Захоронение')
+    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Захоронение')
     file = models.FileField(upload_to='import/', verbose_name='Файл для импорта')
     header = models.IntegerField(default=1, verbose_name='Строки заголовка')
     numbering = models.IntegerField(default=1, verbose_name='Колонки нумерации')
