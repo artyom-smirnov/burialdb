@@ -1,11 +1,13 @@
 import csv
 from collections import OrderedDict
 
+from django.contrib.auth.decorators import login_required
 from django.core import paginator
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import BaseDetailView, SingleObjectMixin
@@ -81,6 +83,10 @@ class CemeteriesListView(BaseListView):
     page_title = 'Захоронения'
     navbar = 'burials'
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CemeteriesListView, self).dispatch( *args, **kwargs)
+
 
 class CemeteryDetailView(DetailWithListView):
     model = Cemetery
@@ -95,6 +101,10 @@ class CemeteryDetailView(DetailWithListView):
         obj = super().get_object()
         return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj)))
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CemeteryDetailView, self).dispatch( *args, **kwargs)
+
 
 class HospitalsView(BaseListView):
     model = Hospital
@@ -104,6 +114,10 @@ class HospitalsView(BaseListView):
 
     def get_queryset(self):
         return Hospital.objects.filter(active_import=None)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(HospitalsView, self).dispatch( *args, **kwargs)
 
 
 class HospitalDetailView(DetailWithListView):
@@ -119,6 +133,10 @@ class HospitalDetailView(DetailWithListView):
         obj = super().get_object()
         return Person.objects.filter(Q(hospital=obj) | Q(hospital_actual=obj))
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(HospitalDetailView, self).dispatch( *args, **kwargs)
+
 
 class PersonsView(BaseListView):
     model = Person
@@ -128,6 +146,10 @@ class PersonsView(BaseListView):
 
     def get_queryset(self):
         return Person.objects.filter(active_import=None)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonsView, self).dispatch( *args, **kwargs)
 
 
 class PersonDetailView(CommonViewMixin, DetailView):
@@ -152,12 +174,21 @@ class PersonDetailView(CommonViewMixin, DetailView):
         context['person_card_pair_values'] = person_card_pair_values
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonDetailView, self).dispatch( *args, **kwargs)
+
+
 class PersonCreateView(CommonViewMixin, CreateView):
     model = Person
     template_name_suffix = '_create'
     form_class = PersonCreateForm
     navbar = 'person_create'
     page_title = 'Добавление нового человека'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonCreateView, self).dispatch( *args, **kwargs)
 
 
 class PersonEditView(CommonViewMixin, UpdateView):
@@ -169,6 +200,10 @@ class PersonEditView(CommonViewMixin, UpdateView):
     def get_page_title(self):
         return 'Редактирование ' + super().get_object().name()
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonEditView, self).dispatch( *args, **kwargs)
+
 
 class PersonDeleteView(CommonViewMixin, DeleteView):
     model = Person
@@ -177,6 +212,10 @@ class PersonDeleteView(CommonViewMixin, DeleteView):
 
     def get_page_title(self):
         return 'Удаление ' + super().get_object().name()
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonDeleteView, self).dispatch( *args, **kwargs)
 
 
 class ImportCreateView(CommonViewMixin, CreateView):
@@ -190,6 +229,10 @@ class ImportCreateView(CommonViewMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['imports'] = Import.objects.all().order_by('name')
         return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ImportCreateView, self).dispatch( *args, **kwargs)
 
 
 def load_csv(import_obj):
@@ -250,6 +293,10 @@ class ImportView(CommonViewMixin, UpdateView):
 
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ImportView, self).dispatch( *args, **kwargs)
+
 
 class ImportDoView(FormMixin, BaseDetailView):
     model = Import
@@ -295,6 +342,10 @@ class ImportDoView(FormMixin, BaseDetailView):
         kwargs['columns_count'] = self.data_cols
         return kwargs
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ImportDoView, self).dispatch( *args, **kwargs)
+
 
 class ImportApplyOrUndoView(View):
     def post(self, request, pk):
@@ -312,3 +363,7 @@ class ImportApplyOrUndoView(View):
             return HttpResponseRedirect(reverse_lazy('person_import'))
 
         return HttpResponseRedirect(obj.get_absolute_url())
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ImportApplyOrUndoView, self).dispatch( *args, **kwargs)

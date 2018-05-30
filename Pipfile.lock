@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a2470efa1d1cea7a231513323780e3379e45912b2e897e561f7e3acd7477b672"
+            "sha256": "69e8723afa123024dd2fe44719dd456137fd981695d94ab9ca4e5c36fbbcc332"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -49,6 +49,13 @@
                 "sha256:705ededc554ad8736157c666681165fe22ead2dec0d5446d65fc9dd976a5a876"
             ],
             "version": "==1.7.2"
+        },
+        "django-recaptcha": {
+            "hashes": [
+                "sha256:88d477a24a87b2f4dbc5102df8b1d123ab027dc1f401e9055e2576fafa2984b2",
+                "sha256:8dccdfd4fd4c765b786a69685b14175ef9cd8676a18d0d58c38debcaadc4daee"
+            ],
+            "version": "==1.4.0"
         },
         "gunicorn": {
             "hashes": [

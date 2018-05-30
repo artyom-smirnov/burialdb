@@ -9,6 +9,7 @@ requests = "*"
 django-crispy-forms = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
+django-recaptcha = "*"
 
 [requires]
 python_version = "3.6"

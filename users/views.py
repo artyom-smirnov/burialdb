@@ -1,3 +1,7 @@
+from django.contrib.auth.views import LoginView
+from users.forms import ReCaptchaAuthenticationForm
 from django.shortcuts import render
 
-# Create your views here.
+
+class ReCaptchaLoginView(LoginView):
+    form_class = ReCaptchaAuthenticationForm

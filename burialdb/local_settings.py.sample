@@ -19,6 +19,21 @@ DATABASES = {
     'default': dj_database_url.parse(DATABASE_URL)
 }
 
+#
+# ReCaptcha config
+#
+
+# RECAPTCHA_ENABLED = True
+
+# RECAPTCHA_PUBLIC_KEY = ''
+
+# RECAPTCHA_PRIVATE_KEY = ''
+
+
+#
+# Logging config
+#
+
 DJANGO_LOG_FILE = os.path.join(BASE_DIR, 'django.log')
 
 BURIALDB_LOG_FILE = os.path.join(BASE_DIR, 'burialdb.log')
