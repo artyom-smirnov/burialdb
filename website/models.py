@@ -70,14 +70,14 @@ class Person(models.Model):
     conscription_place = models.CharField(max_length=255, blank=True, verbose_name='Место призыва')
     conscription_place_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальное место призыва')
 
-    military_unit = models.CharField(max_length=50, blank=True, verbose_name='Часть')
-    military_unit_actual = models.CharField(max_length=50, blank=True, verbose_name='Актуальная часть')
+    military_unit = models.CharField(max_length=255, blank=True, verbose_name='Часть')
+    military_unit_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная часть')
 
-    rank = models.CharField(max_length=50, blank=True, verbose_name='Звание')
-    rank_actual = models.CharField(max_length=50, blank=True, verbose_name='Актуальное звание')
+    rank = models.CharField(max_length=255, blank=True, verbose_name='Звание')
+    rank_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальное звание')
 
-    position = models.CharField(max_length=50, blank=True, verbose_name='Должность')
-    position_actual = models.CharField(max_length=50, blank=True, verbose_name='Актуальная должность')
+    position = models.CharField(max_length=255, blank=True, verbose_name='Должность')
+    position_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная должность')
 
     address = models.CharField(max_length=255, blank=True, verbose_name='Место жительства')
     address_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальное место жительства')
@@ -88,14 +88,14 @@ class Person(models.Model):
     receipt_date = models.CharField(max_length=50, blank=True, verbose_name='Дата поступления')
     receipt_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата поступления')
 
-    receipt_cause = models.CharField(max_length=255, blank=True, verbose_name='Причина поступления')
-    receipt_cause_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная причина поступления')
+    receipt_cause = models.TextField(blank=True, null=True, verbose_name='Причина поступления')
+    receipt_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина поступления')
 
     death_date = models.CharField(max_length=255, blank=True, verbose_name='Дата смерти')
     death_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата смерти')
 
-    death_cause = models.CharField(max_length=255, blank=True, verbose_name='Причина смерти')
-    death_cause_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная причина смерти')
+    death_cause = models.TextField(blank=True, null=True, verbose_name='Причина смерти')
+    death_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина смерти')
 
     grave = models.CharField(max_length=50, blank=True, verbose_name='Номер могилы')
     grave_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный номер могилы')
