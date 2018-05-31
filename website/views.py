@@ -37,6 +37,10 @@ class CommonViewMixin(object):
 
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CommonViewMixin, self).dispatch(*args, **kwargs)
+
 
 class CommonPaginatedViewMixin(CommonViewMixin):
     paginate_by = PAGINATE_BY
@@ -78,10 +82,6 @@ class CommonCreateEditView(CommonViewMixin, CreateView):
     template_name = 'website/common_create_edit.html'
     form_class = None
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CommonCreateEditView, self).dispatch(*args, **kwargs)
-
 
 class CommonDeleteView(CommonViewMixin, DeleteView):
     model = None
@@ -93,9 +93,6 @@ class CommonDeleteView(CommonViewMixin, DeleteView):
     def get_page_title(self):
         return 'Удаление ' + super().get_object().name()
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CommonDeleteView, self).dispatch( *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -113,10 +110,6 @@ class CemeteriesListView(BaseListView):
     page_title = 'Захоронения'
     navbar = 'burials'
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CemeteriesListView, self).dispatch( *args, **kwargs)
-
 
 class CemeteryDetailView(DetailWithListView):
     model = Cemetery
@@ -130,10 +123,6 @@ class CemeteryDetailView(DetailWithListView):
     def get_list_queryset(self):
         obj = super().get_object()
         return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj)))
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CemeteryDetailView, self).dispatch( *args, **kwargs)
 
 
 class CemeteryCreateView(CommonCreateEditView):
@@ -172,10 +161,6 @@ class HospitalsView(BaseListView):
     def get_queryset(self):
         return Hospital.objects.filter(active_import=None)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(HospitalsView, self).dispatch( *args, **kwargs)
-
 
 class HospitalDetailView(DetailWithListView):
     model = Hospital
@@ -189,10 +174,6 @@ class HospitalDetailView(DetailWithListView):
     def get_list_queryset(self):
         obj = super().get_object()
         return Person.objects.filter(Q(hospital=obj) | Q(hospital_actual=obj))
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(HospitalDetailView, self).dispatch( *args, **kwargs)
 
 
 class HospitalCreateView(CommonCreateEditView):
@@ -231,10 +212,6 @@ class PersonsView(BaseListView):
     def get_queryset(self):
         return Person.objects.filter(active_import=None)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PersonsView, self).dispatch( *args, **kwargs)
-
 
 class PersonDetailView(CommonViewMixin, DetailView):
     model = Person
@@ -257,10 +234,6 @@ class PersonDetailView(CommonViewMixin, DetailView):
             )
         context['person_card_pair_values'] = person_card_pair_values
         return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PersonDetailView, self).dispatch( *args, **kwargs)
 
 
 class PersonCreateView(CommonCreateEditView):
@@ -299,10 +272,6 @@ class ImportCreateView(CommonViewMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['imports'] = Import.objects.all().order_by('name')
         return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ImportCreateView, self).dispatch( *args, **kwargs)
 
 
 def load_csv(import_obj):
@@ -362,10 +331,6 @@ class ImportView(CommonViewMixin, UpdateView):
         context['added_persons'] = Person.objects.filter(active_import=obj)
 
         return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ImportView, self).dispatch( *args, **kwargs)
 
 
 class ImportDoView(FormMixin, BaseDetailView):
