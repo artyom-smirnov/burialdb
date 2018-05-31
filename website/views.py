@@ -308,8 +308,6 @@ class ImportView(CommonViewMixin, UpdateView):
         show_all = True if 'show_all' in self.request.GET else False
         context = super().get_context_data(**kwargs)
         obj = super().get_object()
-        cvs_file = obj.file.path
-        header = obj.header
         numbering = obj.numbering
         show_max = 5
 
