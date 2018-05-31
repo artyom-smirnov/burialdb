@@ -203,7 +203,7 @@ class PersonDetailView(CommonViewMixin, DetailView):
         return super(PersonDetailView, self).dispatch( *args, **kwargs)
 
 
-class PersonCreateView(CemeteryCreateView):
+class PersonCreateView(CommonCreateView):
     model = Person
     form_class = PersonCreateForm
     navbar = 'persons'
