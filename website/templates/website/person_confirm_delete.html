@@ -1,8 +1,14 @@
 {% extends "website/base.html" %}
 
 {% block content %}
-<form action="" method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm" />
-</form>
+<div class="card mt-2 mb-2">
+    <div class="card-header"><h3>Удаление человека</h3></div>
+    <div class="card-body">
+        <form action="" method="post">{% csrf_token %}
+            <p>Точно удалить человека "{{ object }}"?</p>
+            <input class="btn btn-danger" type="submit" value="Удалить" />
+        </form>
+    </div>
+</div>
+
 {% endblock %}
