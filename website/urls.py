@@ -9,6 +9,8 @@ urlpatterns = [
     path('burials/', website_views.CemeteriesListView.as_view(), name='cemeteries'),
     path('burials/create/', website_views.CemeteryCreateView.as_view(), name='cemetery_create'),
     path('burials/<int:pk>/', website_views.CemeteryDetailView.as_view(), name='cemetery_detail'),
+    path('burials/<int:pk>/edit/', website_views.CemeteryEditView.as_view(), name='cemetery_edit'),
+    path('burials/<int:pk>/delete/', website_views.CemeteryDeleteView.as_view(), name='cemetery_delete'),
     path('persons/', website_views.PersonsView.as_view(), name='persons'),
     path('persons/create/', website_views.PersonCreateView.as_view(), name='person_create'),
     path('persons/import/', website_views.ImportCreateView.as_view(), name='person_import'),
@@ -21,4 +23,6 @@ urlpatterns = [
     path('hospitals/', website_views.HospitalsView.as_view(), name='hospitals'),
     path('hospitals/create/', website_views.HospitalCreateView.as_view(), name='hospital_create'),
     path('hospitals/<int:pk>/', website_views.HospitalDetailView.as_view(), name='hospital_detail'),
+    path('hospitals/<int:pk>/edit/', website_views.HospitalEditView.as_view(), name='hospital_edit'),
+    path('hospitals/<int:pk>/delete/', website_views.HospitalDeleteView.as_view(), name='hospital_delete'),
 ]

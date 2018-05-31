@@ -14,8 +14,8 @@ from django.views.generic.detail import BaseDetailView, SingleObjectMixin
 from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
 from django.db import transaction
 
-from website.forms import PersonCreateEditForm, ImportCreateForm, ImportUpdateForm, ImportDoForm, HospitalCreateForm, \
-    CemeteryCreateForm
+from website.forms import PersonCreateEditForm, ImportCreateForm, ImportUpdateForm, ImportDoForm, HospitalCreateEditForm, \
+    CemeteryCreateEditForm
 from website.models import Person, Cemetery, Hospital, Import
 
 from django.utils.translation import ugettext_lazy as _
@@ -83,6 +83,20 @@ class CommonCreateEditView(CommonViewMixin, CreateView):
         return super(CommonCreateEditView, self).dispatch(*args, **kwargs)
 
 
+class CommonDeleteView(CommonViewMixin, DeleteView):
+    model = None
+    success_url = None
+    navbar = None
+    template_name = 'website/common_confirm_delete.html'
+
+    def get_page_title(self):
+        return 'Удаление ' + super().get_object().name()
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CommonDeleteView, self).dispatch( *args, **kwargs)
+
+
 class IndexView(TemplateView):
     template_name = "website/index.html"
 
@@ -118,9 +132,28 @@ class CemeteryDetailView(DetailWithListView):
 
 class CemeteryCreateView(CommonCreateEditView):
     model = Cemetery
-    form_class = CemeteryCreateForm
+    form_class = CemeteryCreateEditForm
     navbar = 'burials'
     page_title = 'Добавление нового захоронения'
+
+
+class CemeteryEditView(CommonCreateEditView, UpdateView):
+    model = Cemetery
+    form_class = CemeteryCreateEditForm
+    navbar = 'burials'
+    page_title = 'Редактирование захоронения'
+
+    def get_page_title(self):
+        return 'Редактирование захоронения ' + super().get_object().name
+
+
+class CemeteryDeleteView(CommonDeleteView):
+    model = Cemetery
+    success_url = reverse_lazy('cemeteries')
+    navbar = 'burials'
+
+    def get_page_title(self):
+        return 'Удаление захоронения ' + super().get_object().name
 
 
 class HospitalsView(BaseListView):
@@ -157,9 +190,28 @@ class HospitalDetailView(DetailWithListView):
 
 class HospitalCreateView(CommonCreateEditView):
     model = Hospital
-    form_class = HospitalCreateForm
+    form_class = HospitalCreateEditForm
     navbar = 'hospitals'
     page_title = 'Добавление нового госпиталя'
+
+
+class HospitalEditView(CommonCreateEditView, UpdateView):
+    model = Hospital
+    form_class = HospitalCreateEditForm
+    navbar = 'hospitals'
+    page_title = 'Редактирование госпиталя'
+
+    def get_page_title(self):
+        return 'Редактирование госпиталя ' + super().get_object().name
+
+
+class HospitalDeleteView(CommonDeleteView):
+    model = Hospital
+    success_url = reverse_lazy('hospitals')
+    navbar = 'hospitals'
+
+    def get_page_title(self):
+        return 'Удаление госпиталя ' + super().get_object().name
 
 
 class PersonsView(BaseListView):
@@ -216,20 +268,16 @@ class PersonEditView(CommonCreateEditView, UpdateView):
     navbar = 'persons'
 
     def get_page_title(self):
-        return 'Редактирование ' + super().get_object().name()
+        return 'Редактирование человека ' + super().get_object().name()
 
 
-class PersonDeleteView(CommonViewMixin, DeleteView):
+class PersonDeleteView(CommonDeleteView):
     model = Person
     success_url = reverse_lazy('persons')
     navbar = 'persons'
 
     def get_page_title(self):
-        return 'Удаление ' + super().get_object().name()
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PersonDeleteView, self).dispatch( *args, **kwargs)
+        return 'Удаление человека ' + super().get_object().name()
 
 
 class ImportCreateView(CommonViewMixin, CreateView):

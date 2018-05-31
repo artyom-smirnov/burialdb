@@ -115,9 +115,9 @@ class ImportDoForm(forms.Form):
             self.fields[field_name] = forms.ChoiceField(required=False, choices=mapping)
 
 
-class HospitalCreateForm(forms.ModelForm):
+class HospitalCreateEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(HospitalCreateForm, self).__init__(*args, **kwargs)
+        super(HospitalCreateEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
@@ -132,9 +132,9 @@ class HospitalCreateForm(forms.ModelForm):
         fields = ['name']
 
 
-class CemeteryCreateForm(forms.ModelForm):
+class CemeteryCreateEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(CemeteryCreateForm, self).__init__(*args, **kwargs)
+        super(CemeteryCreateEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
