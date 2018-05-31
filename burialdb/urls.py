@@ -1,11 +1,15 @@
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.urls import path
-
+from django.conf import settings
 from django.contrib import admin
-admin.autodiscover()
+
+if settings.ADMIN_ENABLED:
+    admin.autodiscover()
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('accounts/', include('users.urls')),
     path('', include('website.urls'))
 ]
+
+if settings.ADMIN_ENABLED:
+    urlpatterns.append(path('admin/', admin.site.urls)) 

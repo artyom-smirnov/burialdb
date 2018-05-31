@@ -153,6 +153,8 @@ RECAPTCHA_PRIVATE_KEY = ''
 
 LOGIN_REDIRECT_URL = '/'
 
+ADMIN_ENABLED = False
+
 try:
     from burialdb.local_settings import *
 except ImportError:
