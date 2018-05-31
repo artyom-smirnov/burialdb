@@ -5,13 +5,16 @@ from django.urls import reverse
 
 
 class Cemetery(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name='Название')
 
     class Meta:
         ordering = ["name"]
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('cemetery_detail', kwargs={'pk': self.pk})
 
 
 def default_import_name():
@@ -36,7 +39,7 @@ class Import(models.Model):
 
 
 class Hospital(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name='Название')
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
@@ -44,6 +47,9 @@ class Hospital(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('hospital_detail', kwargs={'pk': self.pk})
 
 
 class Person(models.Model):

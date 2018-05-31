@@ -14,7 +14,8 @@ from django.views.generic.detail import BaseDetailView, SingleObjectMixin
 from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
 from django.db import transaction
 
-from website.forms import PersonCreateForm, ImportCreateForm, ImportUpdateForm, ImportDoForm
+from website.forms import PersonCreateForm, ImportCreateForm, ImportUpdateForm, ImportDoForm, HospitalCreateForm, \
+    CemeteryCreateForm
 from website.models import Person, Cemetery, Hospital, Import
 
 from django.utils.translation import ugettext_lazy as _
@@ -106,6 +107,18 @@ class CemeteryDetailView(DetailWithListView):
         return super(CemeteryDetailView, self).dispatch( *args, **kwargs)
 
 
+class CemeteryCreateView(CommonViewMixin, CreateView):
+    model = Cemetery
+    template_name_suffix = '_create'
+    form_class = CemeteryCreateForm
+    navbar = 'burials'
+    page_title = 'Добавление нового захоронения'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CemeteryCreateView, self).dispatch( *args, **kwargs)
+
+
 class HospitalsView(BaseListView):
     model = Hospital
     context_object_name = 'hospital_list'
@@ -136,6 +149,18 @@ class HospitalDetailView(DetailWithListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(HospitalDetailView, self).dispatch( *args, **kwargs)
+
+
+class HospitalCreateView(CommonViewMixin, CreateView):
+    model = Hospital
+    template_name_suffix = '_create'
+    form_class = HospitalCreateForm
+    navbar = 'hospitals'
+    page_title = 'Добавление нового госпиталя'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(HospitalCreateView, self).dispatch( *args, **kwargs)
 
 
 class PersonsView(BaseListView):

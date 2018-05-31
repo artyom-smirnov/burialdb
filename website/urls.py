@@ -7,6 +7,7 @@ import website.views as website_views
 urlpatterns = [
     path('', website_views.IndexView.as_view()),
     path('burials/', website_views.CemeteriesListView.as_view(), name='cemeteries'),
+    path('burials/create/', website_views.CemeteryCreateView.as_view(), name='cemetery_create'),
     path('burials/<int:pk>/', website_views.CemeteryDetailView.as_view(), name='cemetery_detail'),
     path('persons/', website_views.PersonsView.as_view(), name='persons'),
     path('persons/create/', website_views.PersonCreateView.as_view(), name='person_create'),
@@ -18,5 +19,6 @@ urlpatterns = [
     path('persons/<int:pk>/delete/', website_views.PersonDeleteView.as_view(), name='person_delete'),
     path('persons/<int:pk>/', website_views.PersonDetailView.as_view(), name='person_detail'),
     path('hospitals/', website_views.HospitalsView.as_view(), name='hospitals'),
+    path('hospitals/create/', website_views.HospitalCreateView.as_view(), name='hospital_create'),
     path('hospitals/<int:pk>/', website_views.HospitalDetailView.as_view(), name='hospital_detail'),
 ]

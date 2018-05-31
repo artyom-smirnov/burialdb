@@ -1,21 +1,23 @@
 {% extends "website/base.html" %}
 
 {% block content %}
-    {% if hospital_list %}
-        <div class="card mt-2 mb-2">
-            <div class="card-header"><h3>Госпитали</h3></div>
-
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <tbody>
-                    {% for hospital in hospital_list %}
-                        <tr class="clickable-row" data-href="{% url 'hospital_detail' hospital.id %}"><td>{{ hospital.name }}</td></tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <div class="card mt-2 mb-2">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div><h3>Госпитали</h3></div><div><a href="{% url 'hospital_create' %}"><i class="fa fa-plus"></i></a></div>
         </div>
-    {% endif %}
+
+        <div class="card-body p-0">
+            {% if hospital_list %}
+            <table class="table table-hover mb-0">
+                <tbody>
+                {% for hospital in hospital_list %}
+                    <tr class="clickable-row" data-href="{% url 'hospital_detail' hospital.id %}"><td>{{ hospital.name }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
 
     {% include 'website/snippets/pagination.html' %}
 {% endblock %}

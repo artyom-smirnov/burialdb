@@ -3,7 +3,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Layout, Submit
 
-from website.models import Person, Import
+from website.models import Person, Import, Hospital, Cemetery
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -50,6 +50,7 @@ class PersonCreateForm(forms.ModelForm):
     class Meta:
         model = Person
         exclude = ['active_import']
+
 
 
 class ImportCreateForm(forms.ModelForm):
@@ -113,3 +114,37 @@ class ImportDoForm(forms.Form):
         for column in range(columns_count):
             field_name = 'column_%s' % column
             self.fields[field_name] = forms.ChoiceField(required=False, choices=mapping)
+
+
+class HospitalCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(HospitalCreateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div(
+                Div('name', css_class='col-6'),
+                css_class='row'
+            ),
+            Submit('submit', 'Создать', css_class='btn btn-primary'),
+        )
+
+    class Meta:
+        model = Hospital
+        fields = ['name']
+
+
+class CemeteryCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CemeteryCreateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div(
+                Div('name', css_class='col-6'),
+                css_class='row'
+            ),
+            Submit('submit', 'Создать', css_class='btn btn-primary'),
+        )
+
+    class Meta:
+        model = Cemetery
+        fields = ['name']
