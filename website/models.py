@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django.db import models
 from django.urls import reverse
@@ -36,6 +37,10 @@ class Import(models.Model):
 
     def get_absolute_url(self):
         return reverse('import_update', kwargs={'pk': self.pk})
+
+    def delete(self, *args, **kwargs):
+        os.unlink(self.file.path)
+        super(Import, self).delete(*args, **kwargs)
 
 
 class Hospital(models.Model):

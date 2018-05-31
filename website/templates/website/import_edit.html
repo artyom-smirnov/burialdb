@@ -15,7 +15,7 @@
 
 <div class="card mt-2 mb-2">
     <div class="card-header"><h3>Данные для импорта</h3></div>
-    <form action="{% url 'import_do' import.id %}" method="post">{% csrf_token %}
+    <form action="{% url 'import_do_cancel' import.id %}" method="post">{% csrf_token %}
         <div class="card-body p-0">
             <table class="table table-sm table-responsive">
                 {% if import_header %}
@@ -71,7 +71,8 @@
         </div>
         <div class="card-body pt-0">
             <div class="card-text">
-                <input type="submit" class="btn btn-primary" value="Импортировать">
+                <button type="submit" class="btn btn-primary" name="action" value="import">Импортировать</button>
+                <button type="submit" class="btn btn-danger" name="action" value="cancel">Отменить</button>
             </div>
         </div>
     </form>

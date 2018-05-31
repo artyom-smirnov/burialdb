@@ -340,7 +340,7 @@ class ImportDoView(FormMixin, BaseDetailView):
     data_cols = 0
     http_method_names = ['post']
 
-    def import_data(self, request, *args, **kwargs):
+    def import_data(self, request):
         obj = self.get_object()
         form = self.get_form()
         data_mapping = {}
@@ -368,9 +368,17 @@ class ImportDoView(FormMixin, BaseDetailView):
 
         return HttpResponseRedirect(obj.get_absolute_url())
 
-    def post(self, request, *args, **kwargs):
-        with transaction.atomic():
-            return self.import_data(request, *args, **kwargs)
+    def post(self, request, pk):
+        obj = get_object_or_404(Import, id=pk)
+        action = request.POST['action']
+        if action == 'import':
+            with transaction.atomic():
+                return self.import_data(request)
+        elif action == 'cancel':
+            obj.delete()
+            return HttpResponseRedirect(reverse_lazy('person_import'))
+
+        return HttpResponseRedirect(obj.get_absolute_url())
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
