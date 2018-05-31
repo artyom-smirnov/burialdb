@@ -88,6 +88,7 @@ class CommonDeleteView(CommonViewMixin, DeleteView):
     success_url = None
     navbar = None
     template_name = 'website/common_confirm_delete.html'
+    additional_text = None
 
     def get_page_title(self):
         return 'Удаление ' + super().get_object().name()
@@ -95,6 +96,11 @@ class CommonDeleteView(CommonViewMixin, DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CommonDeleteView, self).dispatch( *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['additional_text'] = self.additional_text
+        return context
 
 
 class IndexView(TemplateView):
@@ -151,6 +157,7 @@ class CemeteryDeleteView(CommonDeleteView):
     model = Cemetery
     success_url = reverse_lazy('cemeteries')
     navbar = 'burials'
+    additional_text = 'При удалении захоронения, люди добавленные в него не удалятся!'
 
     def get_page_title(self):
         return 'Удаление захоронения ' + super().get_object().name
@@ -209,6 +216,7 @@ class HospitalDeleteView(CommonDeleteView):
     model = Hospital
     success_url = reverse_lazy('hospitals')
     navbar = 'hospitals'
+    additional_text = 'При удалении госпиталя, люди добавленные в него не удалятся!'
 
     def get_page_title(self):
         return 'Удаление госпиталя ' + super().get_object().name

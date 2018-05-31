@@ -5,7 +5,10 @@
     <div class="card-header"><h3>{{ page_title }}</h3></div>
     <div class="card-body">
         <form action="" method="post">{% csrf_token %}
-            <p>Точно удалить "{{ object }}"?</p>
+            <h5>Точно удалить "{{ object }}"?</h5>
+            {% if additional_text %}
+                <p>{{ additional_text }}</p>
+            {% endif %}
             <input class="btn btn-danger" type="submit" value="Удалить" />
         </form>
     </div>
