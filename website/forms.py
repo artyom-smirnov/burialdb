@@ -52,7 +52,6 @@ class PersonCreateForm(forms.ModelForm):
         exclude = ['active_import']
 
 
-
 class ImportCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ImportCreateForm, self).__init__(*args, **kwargs)
