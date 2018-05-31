@@ -14,7 +14,7 @@ from django.views.generic.detail import BaseDetailView, SingleObjectMixin
 from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
 from django.db import transaction
 
-from website.forms import PersonCreateForm, ImportCreateForm, ImportUpdateForm, ImportDoForm, HospitalCreateForm, \
+from website.forms import PersonCreateEditForm, ImportCreateForm, ImportUpdateForm, ImportDoForm, HospitalCreateForm, \
     CemeteryCreateForm
 from website.models import Person, Cemetery, Hospital, Import
 
@@ -74,13 +74,13 @@ class DetailWithListView(CommonPaginatedViewMixin, DetailView):
         return context
 
 
-class CommonCreateView(CommonViewMixin, CreateView):
+class CommonCreateEditView(CommonViewMixin, CreateView):
     template_name = 'website/common_create_edit.html'
     form_class = None
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(CommonCreateView, self).dispatch( *args, **kwargs)
+        return super(CommonCreateEditView, self).dispatch(*args, **kwargs)
 
 
 class IndexView(TemplateView):
@@ -116,7 +116,7 @@ class CemeteryDetailView(DetailWithListView):
         return super(CemeteryDetailView, self).dispatch( *args, **kwargs)
 
 
-class CemeteryCreateView(CommonCreateView):
+class CemeteryCreateView(CommonCreateEditView):
     model = Cemetery
     form_class = CemeteryCreateForm
     navbar = 'burials'
@@ -155,7 +155,7 @@ class HospitalDetailView(DetailWithListView):
         return super(HospitalDetailView, self).dispatch( *args, **kwargs)
 
 
-class HospitalCreateView(CommonCreateView):
+class HospitalCreateView(CommonCreateEditView):
     model = Hospital
     form_class = HospitalCreateForm
     navbar = 'hospitals'
@@ -203,25 +203,20 @@ class PersonDetailView(CommonViewMixin, DetailView):
         return super(PersonDetailView, self).dispatch( *args, **kwargs)
 
 
-class PersonCreateView(CommonCreateView):
+class PersonCreateView(CommonCreateEditView):
     model = Person
-    form_class = PersonCreateForm
+    form_class = PersonCreateEditForm
     navbar = 'persons'
     page_title = 'Добавление нового человека'
 
 
-class PersonEditView(CommonViewMixin, UpdateView):
+class PersonEditView(CommonCreateEditView, UpdateView):
     model = Person
-    form_class = PersonCreateForm
-    template_name = 'website/common_create_edit.html'
+    form_class = PersonCreateEditForm
     navbar = 'persons'
 
     def get_page_title(self):
         return 'Редактирование ' + super().get_object().name()
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PersonEditView, self).dispatch( *args, **kwargs)
 
 
 class PersonDeleteView(CommonViewMixin, DeleteView):

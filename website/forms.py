@@ -8,9 +8,9 @@ from website.models import Person, Import, Hospital, Cemetery
 from django.utils.translation import ugettext_lazy as _
 
 
-class PersonCreateForm(forms.ModelForm):
+class PersonCreateEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(PersonCreateForm, self).__init__(*args, **kwargs)
+        super(PersonCreateEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.render_unmentioned_fields = True
 
