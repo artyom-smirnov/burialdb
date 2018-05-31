@@ -74,6 +74,15 @@ class DetailWithListView(CommonPaginatedViewMixin, DetailView):
         return context
 
 
+class CommonCreateView(CommonViewMixin, CreateView):
+    template_name = 'website/common_create_edit.html'
+    form_class = None
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CommonCreateView, self).dispatch( *args, **kwargs)
+
+
 class IndexView(TemplateView):
     template_name = "website/index.html"
 
@@ -107,16 +116,11 @@ class CemeteryDetailView(DetailWithListView):
         return super(CemeteryDetailView, self).dispatch( *args, **kwargs)
 
 
-class CemeteryCreateView(CommonViewMixin, CreateView):
+class CemeteryCreateView(CommonCreateView):
     model = Cemetery
-    template_name_suffix = '_create'
     form_class = CemeteryCreateForm
     navbar = 'burials'
     page_title = 'Добавление нового захоронения'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CemeteryCreateView, self).dispatch( *args, **kwargs)
 
 
 class HospitalsView(BaseListView):
@@ -151,16 +155,11 @@ class HospitalDetailView(DetailWithListView):
         return super(HospitalDetailView, self).dispatch( *args, **kwargs)
 
 
-class HospitalCreateView(CommonViewMixin, CreateView):
+class HospitalCreateView(CommonCreateView):
     model = Hospital
-    template_name_suffix = '_create'
     form_class = HospitalCreateForm
     navbar = 'hospitals'
     page_title = 'Добавление нового госпиталя'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(HospitalCreateView, self).dispatch( *args, **kwargs)
 
 
 class PersonsView(BaseListView):
@@ -204,22 +203,17 @@ class PersonDetailView(CommonViewMixin, DetailView):
         return super(PersonDetailView, self).dispatch( *args, **kwargs)
 
 
-class PersonCreateView(CommonViewMixin, CreateView):
+class PersonCreateView(CemeteryCreateView):
     model = Person
-    template_name_suffix = '_create'
     form_class = PersonCreateForm
     navbar = 'persons'
     page_title = 'Добавление нового человека'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PersonCreateView, self).dispatch( *args, **kwargs)
 
 
 class PersonEditView(CommonViewMixin, UpdateView):
     model = Person
     form_class = PersonCreateForm
-    template_name_suffix = '_edit'
+    template_name = 'website/common_create_edit.html'
     navbar = 'persons'
 
     def get_page_title(self):
