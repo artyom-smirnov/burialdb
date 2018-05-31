@@ -55,5 +55,10 @@
         <script src="{% static 'bootstrap-4.0.0/js/bootstrap.min.js' %}"></script>
         <script src="{% static 'website/scripts.js' %}"></script>
         {% block script %}{% endblock %}
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
     </body>
 </html>
