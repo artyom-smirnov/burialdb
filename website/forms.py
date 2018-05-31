@@ -58,11 +58,21 @@ class ImportCreateForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
-                Div('cemetery', css_class='col-6'),
+                Div('file', css_class='col-6'),
                 css_class='row'
             ),
             Div(
-                Div('file', css_class='col-6'),
+                Div('cemetery', css_class='col-md-6'),
+                css_class='row'
+            ),
+            Div(
+                Div('header', css_class='col-md-6'),
+                Div('numbering', css_class='col-md-6'),
+                css_class='row'
+            ),
+            Div(
+                Div('delimiter', css_class='col-md-6'),
+                Div('quotechar', css_class='col-md-6'),
                 css_class='row'
             ),
             Submit('submit', 'Импортировать', css_class='btn btn-primary'),
@@ -70,12 +80,12 @@ class ImportCreateForm(forms.ModelForm):
 
     class Meta:
         model = Import
-        fields = ['file', 'cemetery']
+        fields = ['cemetery', 'file', 'header', 'numbering', 'delimiter', 'quotechar']
 
 
-class ImportUpdateForm(forms.ModelForm):
+class ImportEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(ImportUpdateForm, self).__init__(*args, **kwargs)
+        super(ImportEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(

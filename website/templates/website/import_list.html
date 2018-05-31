@@ -1,0 +1,21 @@
+{% extends "website/base.html" %}
+
+{% block content %}
+    <div class="card mt-2 mb-2">
+        <div class="card-header"><h3>Незавершенные импорты</h3></div>
+
+        <div class="card-body p-0">
+            {% if import_list %}
+            <table class="table table-hover mb-0">
+                <tbody>
+                {% for import in import_list %}
+                    <tr class="clickable-row" data-href="{% url 'import_view' import.id %}"><td>{{ import.name }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'website/snippets/pagination.html' %}
+{% endblock %}

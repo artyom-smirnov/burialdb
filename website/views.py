@@ -14,7 +14,7 @@ from django.views.generic.detail import BaseDetailView, SingleObjectMixin
 from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
 from django.db import transaction
 
-from website.forms import PersonCreateEditForm, ImportCreateForm, ImportUpdateForm, ImportDoForm, HospitalCreateEditForm, \
+from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
     CemeteryCreateEditForm
 from website.models import Person, Cemetery, Hospital, Import
 
@@ -212,6 +212,11 @@ class PersonsView(BaseListView):
     def get_queryset(self):
         return Person.objects.filter(active_import=None)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['have_imports'] = Import.objects.count() > 0
+        return context
+
 
 class PersonDetailView(CommonViewMixin, DetailView):
     model = Person
@@ -261,17 +266,36 @@ class PersonDeleteView(CommonDeleteView):
         return 'Удаление человека ' + super().get_object().name()
 
 
-class ImportCreateView(CommonViewMixin, CreateView):
+class ImportsListView(BaseListView):
     model = Import
-    template_name_suffix = '_create'
+    context_object_name = 'import_list'
+    page_title = 'Незавершенные импорты'
+    navbar = 'persons'
+
+
+class ImportCreateView(CommonCreateEditView):
+    model = Import
     form_class = ImportCreateForm
     navbar = 'persons'
     page_title = 'Импорт из файла'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['imports'] = Import.objects.all().order_by('name')
-        return context
+
+class ImportEditView(CommonCreateEditView, UpdateView):
+    model = Import
+    form_class = ImportEditForm
+    navbar = 'persons'
+
+    def get_page_title(self):
+        return 'Редактирование импорта ' + super().get_object().name
+
+
+class ImportDeleteView(CommonDeleteView):
+    model = Import
+    success_url = reverse_lazy('persons')
+    navbar = 'persons'
+
+    def get_page_title(self):
+        return 'Удаление импорта ' + super().get_object().name
 
 
 def load_csv(import_obj):
@@ -282,25 +306,29 @@ def load_csv(import_obj):
     data = []
     data_header = []
     data_cols = 0
+    loaded = True
 
-    with open(cvs_file, 'r') as f:
-        spamreader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
-        for row in spamreader:
-            if header:
-                header -= 1
-                data_header.append(row)
-                continue
-            data_cols = max(data_cols, len(row[numbering:]))
-            data.append((row[0:numbering], row[numbering:]))
+    try:
+        with open(cvs_file, 'r') as f:
+            spamreader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
+            for row in spamreader:
+                if header:
+                    header -= 1
+                    data_header.append(row)
+                    continue
+                data_cols = max(data_cols, len(row[numbering:]))
+                data.append((row[0:numbering], row[numbering:]))
+    except:
+        loaded = False
 
-    return data_header, data, data_cols
+    return data_header, data, data_cols, loaded
 
 
 class ImportView(CommonViewMixin, UpdateView):
     model = Import
-    form_class = ImportUpdateForm
+    form_class = ImportEditForm
     context_object_name = 'import'
-    template_name_suffix = '_edit'
+    template_name_suffix = '_view'
     navbar = 'persons'
     page_title = 'Импорт из файла'
 
@@ -311,7 +339,7 @@ class ImportView(CommonViewMixin, UpdateView):
         numbering = obj.numbering
         show_max = 5
 
-        data_header, data, data_cols = load_csv(obj)
+        data_header, data, data_cols, loaded = load_csv(obj)
 
         data_mapping = OrderedDict()
         for field in Person.get_mapped_fields():
@@ -327,6 +355,7 @@ class ImportView(CommonViewMixin, UpdateView):
         context['data_show_len'] = show_max
         context['added_hospitals'] = Hospital.objects.filter(active_import=obj)
         context['added_persons'] = Person.objects.filter(active_import=obj)
+        context['loaded'] = loaded
 
         return context
 
@@ -367,21 +396,13 @@ class ImportDoView(FormMixin, BaseDetailView):
         return HttpResponseRedirect(obj.get_absolute_url())
 
     def post(self, request, pk):
-        obj = get_object_or_404(Import, id=pk)
-        action = request.POST['action']
-        if action == 'import':
-            with transaction.atomic():
-                return self.import_data(request)
-        elif action == 'cancel':
-            obj.delete()
-            return HttpResponseRedirect(reverse_lazy('person_import'))
-
-        return HttpResponseRedirect(obj.get_absolute_url())
+        with transaction.atomic():
+            return self.import_data(request)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if self.csv_data is None:
-            _, self.csv_data, self.data_cols = load_csv(self.get_object())
+            _, self.csv_data, self.data_cols, _ = load_csv(self.get_object())
         kwargs['columns_count'] = self.data_cols
         return kwargs
 

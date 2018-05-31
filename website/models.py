@@ -32,11 +32,14 @@ class Import(models.Model):
     quotechar = models.CharField(max_length=1, default='"', verbose_name='Символ строки')
     data_added = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('import_update', kwargs={'pk': self.pk})
+        return reverse('import_view', kwargs={'pk': self.pk})
 
     def delete(self, *args, **kwargs):
         os.unlink(self.file.path)
