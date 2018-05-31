@@ -393,6 +393,8 @@ class ImportDoView(FormMixin, BaseDetailView):
 
 
 class ImportApplyOrUndoView(View):
+    http_method_names = ['post']
+
     def post(self, request, pk):
         obj = get_object_or_404(Import, id=pk)
         action = request.POST['action']
