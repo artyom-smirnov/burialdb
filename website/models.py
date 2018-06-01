@@ -61,6 +61,10 @@ class Hospital(models.Model):
 
 
 class Person(models.Model):
+    INCOMPLETE = 0
+    PARTIAL = 1
+    COMPLETE = 2
+
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
 
     cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Кладбище')
@@ -181,4 +185,14 @@ class Person(models.Model):
                 return None
         else:
             return value
+
+    def get_status(self):
+        have_some = False
+        for f, f_actual in self.get_pair_card_fields():
+            if self.__getattribute__(f_actual):
+                have_some = True
+            elif have_some:
+                return self.PARTIAL
+        return self.COMPLETE if have_some else self.INCOMPLETE
+
 
