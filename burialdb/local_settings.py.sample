@@ -21,6 +21,12 @@ DATABASES = {
     'default': dj_database_url.parse(DATABASE_URL)
 }
 
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'testdb.sqlite3'
+    }
+
 #
 # ReCaptcha config
 #
