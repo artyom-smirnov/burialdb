@@ -291,7 +291,7 @@ class ImportEditView(CommonCreateEditView, UpdateView):
 
 class ImportDeleteView(CommonDeleteView):
     model = Import
-    success_url = reverse_lazy('persons')
+    success_url = reverse_lazy('import_list')
     navbar = 'persons'
 
     def get_page_title(self):
