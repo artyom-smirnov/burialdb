@@ -18,7 +18,7 @@
             <table class="table table-hover mb-0">
                 <tbody>
                 {% for person in person_list %}
-                    <tr class="clickable-row" data-href="{% url 'person_detail' person.id %}">
+                    <tr class="clickable-row {% if person.get_status == 0 %}table-danger{% elif person.get_status == 1 %}table-warning{% elif person.get_status == 2 %}table-success{% endif %}" data-href="{% url 'person_detail' person.id %}">
                         <td>{{ person.name }}</td>
                     </tr>
                 {% endfor %}
