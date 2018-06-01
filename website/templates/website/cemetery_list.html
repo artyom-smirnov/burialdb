@@ -7,8 +7,8 @@
             <div><a href="{% url 'cemetery_create' %}"  data-toggle="tooltip" data-placement="bottom" title="Добавить"><i class="fa fa-2x fa-plus text-success"></i></a></div>
         </div>
 
+        {% if cemetery_list %}
         <div class="card-body p-0">
-            {% if cemetery_list %}
             <table class="table table-hover mb-0">
                 <tbody>
                 {% for cemetery in cemetery_list %}
@@ -16,8 +16,12 @@
                 {% endfor %}
                 </tbody>
             </table>
-            {% endif %}
         </div>
+        {% else %}
+        <div class="card-body">
+            <p class="card-text text-muted">Список пуст</p>
+        </div>
+        {% endif %}
     </div>
 
     {% include 'website/snippets/pagination.html' %}

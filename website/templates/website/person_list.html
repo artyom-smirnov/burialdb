@@ -13,8 +13,8 @@
             </div>
         </div>
 
+        {% if person_list %}
         <div class="card-body p-0">
-            {% if person_list %}
             <table class="table table-hover mb-0">
                 <tbody>
                 {% for person in person_list %}
@@ -24,8 +24,12 @@
                 {% endfor %}
                 </tbody>
             </table>
-            {% endif %}
         </div>
+        {% else %}
+        <div class="card-body">
+            <p class="card-text text-muted">Список пуст</p>
+        </div>
+        {% endif %}
     </div>
 
     {% include 'website/snippets/pagination.html' %}
