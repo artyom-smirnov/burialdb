@@ -7,13 +7,30 @@
 {% if not import.data_added %}
 <div class="card mt-2 mb-2">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <div><h2 class="d-inline-block">Импорт {{ import.name }}</h2></div>
+        <div><h3 class="d-inline-block">Импорт {{ import.name }}</h3></div>
         <div>
             <a href="{% url 'import_edit' import.id %}"><i class="fa fa-2x fa-edit text-info mr-4" data-toggle="tooltip" data-placement="bottom" title="Редактировать"></i></a>
             <a href="{% url 'import_delete' import.id %}"><i class="fa fa-2x fa-trash text-danger" data-toggle="tooltip" data-placement="bottom" title="Удалить"></i></a>
         </div>
     </div>
-    {% if loaded %}
+    <div class="card-body">
+        {% if loaded %}
+            {% if import.cemetery %}
+                <p class="card-text">Люди будут добавлены в захоронение {{ import.cemetery.name }}</p>
+            {% else %}
+                <p class="card-text text-warning">Захоронение не назначено!</p>
+            {% endif %}
+        {% else %}
+            <p class="card-text text-danger">Не удалось прочитать файл</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if loaded %}
+<div class="card mt-2 mb-2">
+    <div class="card-header">
+        <h3>Данные импорта</h3>
+    </div>
     <form action="{% url 'import_do_cancel' import.id %}" method="post">{% csrf_token %}
         <div class="card-body p-0">
             <table class="table table-sm table-responsive">
@@ -84,14 +101,9 @@
         {% endif %}
     </div>
     {% endif %}
-    {% else %} {# loaded #}
-    <div class="card-body">
-        <div class="card-text">
-            <h5>Не удалось прочитать файл</h5>
-        </div>
-    </div>
-    {% endif %} {# loaded #}
 </div>
+{% endif %} {# loaded #}
+
 {% else %} {# not import.data_added #}
 <div class="card mt-2 mb-2">
     <div class="card-header"><h3>Импорт завершен</h3></div>
