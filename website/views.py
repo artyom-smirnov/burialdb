@@ -317,7 +317,7 @@ class ImportView(CommonViewMixin, UpdateView):
 
         try:
             importer = ImporterFactory(obj).get_importer()
-            data_header, data, data_cols = importer.import_data(False)
+            data_header, data, data_cols = importer.import_data()
         except Exception as e:
             error = str(e)
 

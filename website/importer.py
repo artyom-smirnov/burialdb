@@ -19,7 +19,7 @@ class ImporterFactory(object):
         if mimetype == 'text/csv':
             return CSVImporter(self._import_object)
         else:
-            raise Exception('Не знаю как обработать файл типа {0}'.format(ext))
+            raise Exception('Не знаю как обработать файл типа {0} ({1})'.format(ext, mimetype))
 
 
 class CSVImporter(object):
@@ -34,7 +34,7 @@ class CSVImporter(object):
     def get_name():
         return 'csv'
 
-    def import_data(self, throw=True):
+    def import_data(self):
         data = []
         data_header = []
         data_cols = 0
@@ -49,7 +49,7 @@ class CSVImporter(object):
         encoding = detector.result['encoding']
 
         if not encoding:
-            raise Exception('Невозможно определить кодировку или фаайл бинарный Can not detect encoding or binary file')
+            raise Exception('Невозможно определить кодировку или файл бинарный')
 
         with open(self._cvs_file, 'r', encoding=encoding) as f:
             reader = csv.reader(f, delimiter=self._delimiter, quotechar=self._quotechar)
