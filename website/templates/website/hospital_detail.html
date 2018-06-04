@@ -18,11 +18,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <tbody>
-                    {% for person in page_obj %}
-                        <tr class="clickable-row" data-href="{% url 'person_detail' person.id %}">
-                            <td>{{ person.name }}</td>
-                        </tr>
-                    {% endfor %}
+                        {% include 'website/snippets/person_list_rows.html' with person_list=page_obj %}
                     </tbody>
                 </table>
             </div>
