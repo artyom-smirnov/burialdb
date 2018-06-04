@@ -76,7 +76,7 @@ class Person(models.Model):
     fio = models.CharField(max_length=255, blank=True, verbose_name='ФИО')
     fio_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальные ФИО')
 
-    year = models.CharField(max_length=50, null=True, blank=True, verbose_name='Год рождения')
+    year = models.CharField(max_length=255, null=True, blank=True, verbose_name='Год рождения')
     year_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный год рождения')
 
     born_region = models.CharField(max_length=255, blank=True, verbose_name='Регион (страна) рождения')
@@ -103,7 +103,7 @@ class Person(models.Model):
     relatives = models.CharField(max_length=1024, blank=True, verbose_name='Родственники')
     relatives_actual = models.CharField(max_length=1024, blank=True, verbose_name='Актуальные родственники')
 
-    receipt_date = models.CharField(max_length=50, blank=True, verbose_name='Дата поступления')
+    receipt_date = models.CharField(max_length=255, blank=True, verbose_name='Дата поступления')
     receipt_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата поступления')
 
     receipt_cause = models.TextField(blank=True, null=True, verbose_name='Причина поступления')
@@ -115,7 +115,7 @@ class Person(models.Model):
     death_cause = models.TextField(blank=True, null=True, verbose_name='Причина смерти')
     death_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина смерти')
 
-    grave = models.CharField(max_length=50, blank=True, verbose_name='Номер могилы')
+    grave = models.CharField(max_length=255, blank=True, verbose_name='Номер могилы')
     grave_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный номер могилы')
 
     notes = models.TextField(blank=True, verbose_name='Примечания')
