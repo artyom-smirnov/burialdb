@@ -300,7 +300,7 @@ class ImportView(CommonViewMixin, UpdateView):
     model = Import
     form_class = ImportEditForm
     context_object_name = 'import'
-    template_name_suffix = '_view'
+    template_name_suffix = '_detail'
     navbar = 'persons'
     page_title = 'Импорт из файла'
 
