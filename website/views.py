@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.base import ContextMixin
 from django.views.generic.detail import BaseDetailView
 from django.views.generic.edit import FormMixin
 from django.db import transaction
@@ -21,7 +22,7 @@ from website.models import Person, Cemetery, Hospital, Import
 PAGINATE_BY = 10
 
 
-class CommonViewMixin(object):
+class CommonViewMixin(ContextMixin):
     page_title = 'Untitled'
     navbar = None
 
@@ -90,7 +91,6 @@ class CommonDeleteView(CommonViewMixin, DeleteView):
 
     def get_page_title(self):
         return 'Удаление ' + super().get_object().name()
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -347,7 +347,7 @@ class ImportDoView(FormMixin, BaseDetailView):
     data_cols = 0
     http_method_names = ['post']
 
-    def import_data(self, request):
+    def import_data(self):
         obj = self.get_object()
         form = self.get_form()
         data_mapping = {}
@@ -375,7 +375,7 @@ class ImportDoView(FormMixin, BaseDetailView):
 
     def post(self, request, pk):
         with transaction.atomic():
-            return self.import_data(request)
+            return self.import_data()
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -387,7 +387,7 @@ class ImportDoView(FormMixin, BaseDetailView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(ImportDoView, self).dispatch( *args, **kwargs)
+        return super(ImportDoView, self).dispatch(*args, **kwargs)
 
 
 class ImportApplyOrUndoView(View):
@@ -411,4 +411,4 @@ class ImportApplyOrUndoView(View):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(ImportApplyOrUndoView, self).dispatch( *args, **kwargs)
+        return super(ImportApplyOrUndoView, self).dispatch(*args, **kwargs)
