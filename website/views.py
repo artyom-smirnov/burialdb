@@ -319,6 +319,9 @@ def load_csv(import_obj, throw=True):
             detector.close()
         encoding = detector.result['encoding']
 
+        if not encoding:
+            raise Exception('Can not detect encoding or binary file')
+
         with open(cvs_file, 'r', encoding=encoding) as f:
             reader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
             for row in reader:
