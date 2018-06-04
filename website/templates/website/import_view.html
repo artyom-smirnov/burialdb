@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="card-body">
-        {% if loaded %}
+        {% if not error %}
             {% if import.cemetery %}
                 <p class="card-text">Люди будут добавлены в захоронение {{ import.cemetery.name }}</p>
             {% else %}
@@ -22,11 +22,12 @@
             {% endif %}
         {% else %}
             <p class="card-text text-danger">Не удалось прочитать файл</p>
+            <pre class="card-text text-danger">{{ error }}</pre>
         {% endif %}
     </div>
 </div>
 
-{% if loaded %}
+{% if not error %}
 <div class="card mt-2 mb-2">
     <div class="card-header">
         <h3>Данные импорта</h3>
@@ -102,7 +103,7 @@
     </div>
     {% endif %}
 </div>
-{% endif %} {# loaded #}
+{% endif %} {# not error #}
 
 {% else %} {# not import.data_added #}
 <div class="card mt-2 mb-2">

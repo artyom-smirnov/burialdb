@@ -298,7 +298,7 @@ class ImportDeleteView(CommonDeleteView):
         return 'Удаление импорта ' + super().get_object().name
 
 
-def load_csv(import_obj):
+def load_csv(import_obj, throw=True):
     cvs_file = import_obj.file.path
     header = import_obj.header
     numbering = import_obj.numbering
@@ -306,22 +306,24 @@ def load_csv(import_obj):
     data = []
     data_header = []
     data_cols = 0
-    loaded = True
+    error = None
 
     try:
         with open(cvs_file, 'r') as f:
-            spamreader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
-            for row in spamreader:
+            reader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
+            for row in reader:
                 if header:
                     header -= 1
                     data_header.append(row)
                     continue
                 data_cols = max(data_cols, len(row[numbering:]))
                 data.append((row[0:numbering], row[numbering:]))
-    except:
-        loaded = False
+    except Exception as e:
+        if throw:
+            raise
+        error = str(e)
 
-    return data_header, data, data_cols, loaded
+    return data_header, data, data_cols, error
 
 
 class ImportView(CommonViewMixin, UpdateView):
@@ -339,7 +341,7 @@ class ImportView(CommonViewMixin, UpdateView):
         numbering = obj.numbering
         show_max = 5
 
-        data_header, data, data_cols, loaded = load_csv(obj)
+        data_header, data, data_cols, error = load_csv(obj, False)
 
         data_mapping = OrderedDict()
         for field in Person.get_mapped_fields():
@@ -355,7 +357,7 @@ class ImportView(CommonViewMixin, UpdateView):
         context['data_show_len'] = show_max
         context['added_hospitals'] = Hospital.objects.filter(active_import=obj)
         context['added_persons'] = Person.objects.filter(active_import=obj)
-        context['loaded'] = loaded
+        context['error'] = error
 
         return context
 
