@@ -363,8 +363,6 @@ class ImportDoView(FormMixin, BaseDetailView):
                 person.cemetery = obj.cemetery
                 for field, col in data_mapping.items():
                     val = row[1][col]
-                    if len(val) > 255:
-                        print(val)
                     person.__setattr__(field, Person.translate_mapped_field_value(field, val, obj))
                     person.active_import = obj
                 persons.append(person)
