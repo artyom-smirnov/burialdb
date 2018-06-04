@@ -1,6 +1,7 @@
 import csv
 from collections import OrderedDict
 
+from chardet import UniversalDetector
 from django.contrib.auth.decorators import login_required
 from django.core import paginator
 from django.db.models import Q
@@ -309,7 +310,16 @@ def load_csv(import_obj, throw=True):
     error = None
 
     try:
-        with open(cvs_file, 'r') as f:
+        detector = UniversalDetector()
+        detector.reset()
+        with open(cvs_file, 'rb') as f:
+            for line in f.readlines():
+                detector.feed(line)
+                if detector.done: break
+            detector.close()
+        encoding = detector.result['encoding']
+
+        with open(cvs_file, 'r', encoding=encoding) as f:
             reader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
             for row in reader:
                 if header:
