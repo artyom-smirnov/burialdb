@@ -1,25 +1,22 @@
-import csv
 from collections import OrderedDict
 
-from chardet import UniversalDetector
 from django.contrib.auth.decorators import login_required
 from django.core import paginator
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.views.generic.detail import BaseDetailView, SingleObjectMixin
-from django.views.generic.edit import ProcessFormView, ModelFormMixin, BaseUpdateView, FormMixin
+from django.views.generic.detail import BaseDetailView
+from django.views.generic.edit import FormMixin
 from django.db import transaction
 
+from importer import ImporterFactory
 from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
     CemeteryCreateEditForm
 from website.models import Person, Cemetery, Hospital, Import
-
-from django.utils.translation import ugettext_lazy as _
 
 PAGINATE_BY = 10
 
@@ -299,46 +296,6 @@ class ImportDeleteView(CommonDeleteView):
         return 'Удаление импорта ' + super().get_object().name
 
 
-def load_csv(import_obj, throw=True):
-    cvs_file = import_obj.file.path
-    header = import_obj.header
-    numbering = import_obj.numbering
-
-    data = []
-    data_header = []
-    data_cols = 0
-    error = None
-
-    try:
-        detector = UniversalDetector()
-        detector.reset()
-        with open(cvs_file, 'rb') as f:
-            for line in f.readlines():
-                detector.feed(line)
-                if detector.done: break
-            detector.close()
-        encoding = detector.result['encoding']
-
-        if not encoding:
-            raise Exception('Can not detect encoding or binary file')
-
-        with open(cvs_file, 'r', encoding=encoding) as f:
-            reader = csv.reader(f, delimiter=import_obj.delimiter, quotechar=import_obj.quotechar)
-            for row in reader:
-                if header:
-                    header -= 1
-                    data_header.append(row)
-                    continue
-                data_cols = max(data_cols, len(row[numbering:]))
-                data.append((row[0:numbering], row[numbering:]))
-    except Exception as e:
-        if throw:
-            raise
-        error = str(e)
-
-    return data_header, data, data_cols, error
-
-
 class ImportView(CommonViewMixin, UpdateView):
     model = Import
     form_class = ImportEditForm
@@ -353,8 +310,16 @@ class ImportView(CommonViewMixin, UpdateView):
         obj = super().get_object()
         numbering = obj.numbering
         show_max = 5
+        data_header = 0
+        data_cols = 0
+        data = []
+        error = None
 
-        data_header, data, data_cols, error = load_csv(obj, False)
+        try:
+            importer = ImporterFactory(obj).get_importer()
+            data_header, data, data_cols = importer.import_data(False)
+        except Exception as e:
+            error = str(e)
 
         data_mapping = OrderedDict()
         for field in Person.get_mapped_fields():
@@ -417,7 +382,8 @@ class ImportDoView(FormMixin, BaseDetailView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if self.csv_data is None:
-            _, self.csv_data, self.data_cols, _ = load_csv(self.get_object())
+            importer = ImporterFactory(self.get_object()).get_importer()
+            _, self.csv_data, self.data_cols = importer.import_data()
         kwargs['columns_count'] = self.data_cols
         return kwargs
 
