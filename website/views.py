@@ -2,9 +2,11 @@ from collections import OrderedDict
 
 from django.contrib.auth.decorators import login_required
 from django.core import paginator
+from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template import loader
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -12,14 +14,13 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import BaseDetailView
 from django.views.generic.edit import FormMixin
-from django.db import transaction
 
-from website.importer import ImporterFactory
 from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
     CemeteryCreateEditForm
+from website.importer import ImporterFactory
 from website.models import Person, Cemetery, Hospital, Import
 
-PAGINATE_BY = 10
+PAGINATE_BY = 25
 
 
 class CommonViewMixin(ContextMixin):
@@ -210,10 +211,20 @@ class PersonsView(BaseListView):
     def get_queryset(self):
         return Person.objects.filter(active_import=None)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['have_imports'] = Import.objects.count() > 0
         return context
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            self.object_list = self.get_queryset()
+            allow_empty = self.get_allow_empty()
+            context = self.get_context_data()
+            content = loader.render_to_string('website/snippets/person_list_rows.html', context, request)
+            return JsonResponse({"content": content})
+        else:
+            return super().get(request, args, kwargs)
 
 
 class PersonDetailView(CommonViewMixin, DetailView):

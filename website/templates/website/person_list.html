@@ -16,12 +16,8 @@
         {% if person_list %}
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
-                <tbody>
-                {% for person in person_list %}
-                    <tr class="clickable-row {% if person.get_status == 0 %}table-danger{% elif person.get_status == 1 %}table-warning{% elif person.get_status == 2 %}table-success{% endif %}" data-href="{% url 'person_detail' person.id %}">
-                        <td>{{ person.name }}</td>
-                    </tr>
-                {% endfor %}
+                <tbody id="paginated_list">
+                    {% include 'website/snippets/person_list_rows.html' with person_list=person_list %}
                 </tbody>
             </table>
         </div>
@@ -31,6 +27,32 @@
         </div>
         {% endif %}
     </div>
+{% endblock %}
 
-    {% include 'website/snippets/pagination.html' %}
+{% block script %}
+<script>
+var current_page = {{ page_obj.number }};
+
+$(window).scroll(function() {
+    if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+        load_more();
+    }
+});
+
+function load_more()
+{
+    $.ajax({
+        url: "{% url 'persons' %}",
+        data: { "page": current_page + 1 },
+        contentType: "application/json",
+        success: function (data) {
+            current_page += 1;
+            $('#paginated_list tr:last').after(data.content);
+        },
+        error: function () {
+            load_more = function(){}
+        }
+    });
+}
+</script>
 {% endblock %}
