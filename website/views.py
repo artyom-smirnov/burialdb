@@ -13,7 +13,7 @@ from django.views.generic.detail import BaseDetailView
 from django.views.generic.edit import FormMixin
 from django.db import transaction
 
-from importer import ImporterFactory
+from website.importer import ImporterFactory
 from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
     CemeteryCreateEditForm
 from website.models import Person, Cemetery, Hospital, Import
