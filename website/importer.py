@@ -5,6 +5,8 @@ import mimetypes
 from mimetypes import MimeTypes
 from chardet import UniversalDetector
 
+import openpyxl
+
 
 class ImporterFactory(object):
     def __init__(self, import_object):
@@ -18,6 +20,8 @@ class ImporterFactory(object):
         mimetype, _ = m.guess_type(path)
         if mimetype == 'text/csv':
             return CSVImporter(self._import_object)
+        elif mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            return XLSXImporter(self._import_object)
         else:
             raise Exception('Не знаю как обработать файл типа {0} ({1})'.format(ext, mimetype))
 
@@ -63,5 +67,42 @@ class CSVImporter(object):
                     continue
                 data_cols = max(data_cols, len(row[self._numbering:]))
                 data.append((row[0:self._numbering], row[self._numbering:]))
+
+        return data_header, data, data_cols
+
+
+class XLSXImporter(object):
+    def __init__(self, import_object):
+        self._xlsx_file = import_object.file.path
+        self._header = import_object.header
+        self._numbering = import_object.numbering
+
+    @staticmethod
+    def get_name():
+        return 'xlsx'
+
+    def import_data(self):
+        wb = openpyxl.load_workbook(self._xlsx_file)
+        wb.template = False
+        ws = wb.active
+
+        header = self._header
+
+        data = []
+        data_header = []
+        data_cols = 0
+
+        for row in ws.rows:
+            values_row = [cell.value if cell.value else '' for cell in row]
+            if values_row.count('') == len(values_row):
+                continue
+
+            if header:
+                header -= 1
+                data_header.append(values_row)
+                continue
+            else:
+                data_cols = max(data_cols, len(values_row[self._numbering:]))
+                data.append((values_row[0:self._numbering], values_row[self._numbering:]))
 
         return data_header, data, data_cols
