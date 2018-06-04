@@ -55,6 +55,8 @@ class CSVImporter(object):
             reader = csv.reader(f, delimiter=self._delimiter, quotechar=self._quotechar)
             header = self._header
             for row in reader:
+                if row.count('') == len(row):
+                    continue
                 if header:
                     header -= 1
                     data_header.append(row)
