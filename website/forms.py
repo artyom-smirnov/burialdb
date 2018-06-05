@@ -75,7 +75,7 @@ class ImportCreateForm(forms.ModelForm):
                 Div('quotechar', css_class='col-md-6'),
                 css_class='row'
             ),
-            Submit('submit', 'Импортировать', css_class='btn btn-primary'),
+            Submit('submit', 'Сохранить', css_class='btn btn-primary'),
         )
 
     class Meta:
@@ -102,7 +102,7 @@ class ImportEditForm(forms.ModelForm):
                 Div('quotechar', css_class='col-md-6'),
                 css_class='row'
             ),
-            Submit('submit', 'Применить', css_class='btn btn-primary'),
+            Submit('submit', 'Сохранить', css_class='btn btn-primary'),
         )
 
     class Meta:
@@ -134,7 +134,7 @@ class HospitalCreateEditForm(forms.ModelForm):
                 Div('name', css_class='col-6'),
                 css_class='row'
             ),
-            Submit('submit', 'Создать', css_class='btn btn-primary'),
+            Submit('submit', 'Сохранить', css_class='btn btn-primary'),
         )
 
     class Meta:
@@ -151,7 +151,7 @@ class CemeteryCreateEditForm(forms.ModelForm):
                 Div('name', css_class='col-6'),
                 css_class='row'
             ),
-            Submit('submit', 'Создать', css_class='btn btn-primary'),
+            Submit('submit', 'Сохранить', css_class='btn btn-primary'),
         )
 
     class Meta:
