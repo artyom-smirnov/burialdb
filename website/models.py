@@ -114,8 +114,8 @@ class Person(models.Model):
     death_cause = models.TextField(blank=True, null=True, verbose_name='Причина смерти')
     death_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина смерти')
 
-    grave = models.CharField(max_length=255, blank=True, verbose_name='Номер могилы')
-    grave_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный номер могилы')
+    grave = models.CharField(max_length=255, blank=True, verbose_name='Место захоронения')
+    grave_actual = models.CharField(max_length=255, blank=True, default='', verbose_name='Актуальное место захоронения')
 
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
