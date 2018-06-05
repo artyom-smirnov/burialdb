@@ -72,50 +72,50 @@ class Person(models.Model):
     hospital = models.CharField(max_length=255, blank=True, null=True, verbose_name='Госпиталь')
     hospital_actual = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital_actual', verbose_name='Актуальный госпиталь')
 
-    fio = models.CharField(max_length=255, blank=True, verbose_name='ФИО')
-    fio_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальные ФИО')
+    fio = models.CharField(max_length=255, blank=True, null=True, verbose_name='ФИО')
+    fio_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальные ФИО')
 
     year = models.CharField(max_length=255, null=True, blank=True, verbose_name='Год рождения')
     year_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный год рождения')
 
-    born_region = models.CharField(max_length=255, blank=True, verbose_name='Регион (страна) рождения')
-    born_region_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальный регион (страна) рождения')
+    born_region = models.CharField(max_length=255, blank=True, null=True, verbose_name='Регион (страна) рождения')
+    born_region_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальный регион (страна) рождения')
 
-    born_address = models.CharField(max_length=255, blank=True, verbose_name='Адрес рождения')
-    born_address_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальный адрес рождения')
+    born_address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Адрес рождения')
+    born_address_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальный адрес рождения')
 
-    conscription_place = models.CharField(max_length=255, blank=True, verbose_name='Место призыва')
-    conscription_place_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальное место призыва')
+    conscription_place = models.CharField(max_length=255, blank=True, null=True, verbose_name='Место призыва')
+    conscription_place_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное место призыва')
 
-    military_unit = models.CharField(max_length=255, blank=True, verbose_name='Часть')
-    military_unit_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная часть')
+    military_unit = models.CharField(max_length=255, blank=True, null=True, verbose_name='Часть')
+    military_unit_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальная часть')
 
-    rank = models.CharField(max_length=255, blank=True, verbose_name='Звание')
-    rank_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальное звание')
+    rank = models.CharField(max_length=255, blank=True, null=True, verbose_name='Звание')
+    rank_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное звание')
 
-    position = models.CharField(max_length=255, blank=True, verbose_name='Должность')
-    position_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальная должность')
+    position = models.CharField(max_length=255, blank=True, null=True, verbose_name='Должность')
+    position_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальная должность')
 
-    address = models.CharField(max_length=255, blank=True, verbose_name='Место жительства')
-    address_actual = models.CharField(max_length=255, blank=True, verbose_name='Актуальное место жительства')
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Место жительства')
+    address_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное место жительства')
 
-    relatives = models.CharField(max_length=1024, blank=True, verbose_name='Родственники')
-    relatives_actual = models.CharField(max_length=1024, blank=True, verbose_name='Актуальные родственники')
+    relatives = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Родственники')
+    relatives_actual = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Актуальные родственники')
 
-    receipt_date = models.CharField(max_length=255, blank=True, verbose_name='Дата поступления')
+    receipt_date = models.CharField(max_length=255, blank=True, null=True, verbose_name='Дата поступления')
     receipt_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата поступления')
 
     receipt_cause = models.TextField(blank=True, null=True, verbose_name='Причина поступления')
     receipt_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина поступления')
 
-    death_date = models.CharField(max_length=255, blank=True, verbose_name='Дата смерти')
+    death_date = models.CharField(max_length=255, blank=True, null=True, verbose_name='Дата смерти')
     death_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата смерти')
 
     death_cause = models.TextField(blank=True, null=True, verbose_name='Причина смерти')
     death_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина смерти')
 
-    grave = models.CharField(max_length=255, blank=True, verbose_name='Расположение могилы')
-    grave_actual = models.CharField(max_length=255, blank=True, default='', verbose_name='Актуальное расположение могилы')
+    grave = models.CharField(max_length=255, blank=True, null=True, verbose_name='Расположение могилы')
+    grave_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное расположение могилы')
 
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
