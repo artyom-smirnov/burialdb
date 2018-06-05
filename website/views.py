@@ -158,7 +158,7 @@ class HospitalsView(BaseListView):
     navbar = 'hospitals'
 
     def get_queryset(self):
-        return Hospital.objects.filter(active_import=None)
+        return Hospital.objects.filter()
 
 
 class HospitalDetailView(DetailWithListView):
@@ -344,7 +344,6 @@ class ImportView(CommonViewMixin, UpdateView):
         context['import_data'] = data[:show_max]
         context['data_len'] = len(data)
         context['data_show_len'] = show_max
-        context['added_hospitals'] = Hospital.objects.filter(active_import=obj)
         context['added_persons'] = Person.objects.filter(active_import=obj)
         context['error'] = error
 
@@ -410,7 +409,6 @@ class ImportApplyOrUndoView(View):
         if action == 'undo':
             with transaction.atomic():
                 Person.objects.filter(active_import=obj).delete()
-                Hospital.objects.filter(active_import=obj).delete()
                 obj.data_added = False
                 obj.save()
             return HttpResponseRedirect(obj.get_absolute_url())

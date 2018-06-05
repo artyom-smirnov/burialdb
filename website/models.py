@@ -48,7 +48,6 @@ class Import(models.Model):
 
 class Hospital(models.Model):
     name = models.CharField(max_length=255, verbose_name='Название')
-    active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["name"]
@@ -70,7 +69,7 @@ class Person(models.Model):
     cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Кладбище')
     cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное кладбище')
 
-    hospital = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital', verbose_name='Госпиталь')
+    hospital = models.CharField(max_length=255, blank=True, null=True, verbose_name='Госпиталь')
     hospital_actual = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital_actual', verbose_name='Актуальный госпиталь')
 
     fio = models.CharField(max_length=255, blank=True, verbose_name='ФИО')
@@ -173,18 +172,7 @@ class Person(models.Model):
 
     @classmethod
     def translate_mapped_field_value(cls, field_name, value, active_import=None):
-        if field_name == 'hospital':
-            value = value.strip()
-            if value:
-                hospital, created = Hospital.objects.get_or_create(name=value)
-                if active_import and created:
-                    hospital.active_import = active_import
-                    hospital.save()
-                return hospital
-            else:
-                return None
-        else:
-            return value
+        return value
 
     def get_status(self):
         have_some = False
