@@ -30,29 +30,5 @@
 {% endblock %}
 
 {% block script %}
-<script>
-var current_page = {{ page_obj.number }};
-
-$(window).scroll(function() {
-    if ($(window).scrollTop() === $(document).height() - $(window).height()) {
-        load_more();
-    }
-});
-
-function load_more()
-{
-    $.ajax({
-        url: "{% url 'persons' %}",
-        data: { "page": current_page + 1 },
-        contentType: "application/json",
-        success: function (data) {
-            current_page += 1;
-            $('#paginated_list tr:last').after(data.content);
-        },
-        error: function () {
-            load_more = function(){}
-        }
-    });
-}
-</script>
+<script>activate_pagination({{ page_obj.number }}, '{% url 'persons' %}', $("#paginated_list tr:last"));</script>
 {% endblock %}
