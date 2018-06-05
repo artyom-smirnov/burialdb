@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0025_auto_20180605_1521'),
+        ('website', '0024_remove_hospital_active_import'),
     ]
 
     operations = [
@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='person',
             name='grave_actual',
-            field=models.CharField(blank=True, default='', max_length=255, verbose_name='Актуальное расположение могилы'),
+            field=models.CharField(blank=True, max_length=255, verbose_name='Актуальное расположение могилы'),
         ),
     ]
