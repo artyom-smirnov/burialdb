@@ -1,4 +1,5 @@
 import csv
+import datetime
 import os
 import mimetypes
 
@@ -93,7 +94,7 @@ class XLSXImporter(object):
         data_cols = 0
 
         for row in ws.rows:
-            values_row = [cell.value if cell.value else '' for cell in row]
+            values_row = [self.format_cell(cell) if cell.value else '' for cell in row]
             if values_row.count('') == len(values_row):
                 continue
 
@@ -106,3 +107,12 @@ class XLSXImporter(object):
                 data.append((values_row[0:self._numbering], values_row[self._numbering:]))
 
         return data_header, data, data_cols
+
+    def format_cell(self, cell):
+        value = cell.value
+        if type(value) is datetime.datetime:
+            if not value.time() or value.time() == datetime.time(0):
+                return value.strftime('%d.%m.%Y')
+            else:
+                return value.strftime('%d.%m.%Y %H:%M')
+        return value
