@@ -30,3 +30,10 @@ function activate_pagination(page, load_more_url, list_element) {
         });
     }
 }
+
+function copy_data(from, to)
+{
+    f_elem = $('#'+from);
+    t_elem = $('#'+to);
+    t_elem.val(f_elem.val());
+}

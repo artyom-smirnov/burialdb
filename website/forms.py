@@ -1,7 +1,7 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Layout, Submit
+from crispy_forms.layout import Div, Layout, Submit, Button, HTML
 
 from website.models import Person, Import, Hospital, Cemetery
 
@@ -14,35 +14,39 @@ class PersonCreateEditForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.render_unmentioned_fields = True
 
-        fields = [
-            'fio',
-            'year',
-            'born_region',
-            'born_address',
-            'conscription_place',
-            'military_unit',
-            'rank',
-            'position',
-            'address',
-            'relatives',
-            'hospital',
-            'receipt_date',
-            'receipt_cause',
-            'death_date',
-            'death_cause',
-            'grave',
-            'cemetery'
-        ]
-
         fields = Person.get_pair_card_fields()
         layout = Layout()
+
+        layout.append(
+            Div(
+                Div(HTML("<b>Первичные данные</b>"), css_class='col text-center'),
+                Div(HTML("<b>Актуальные данные</b>"), css_class='col text-center'),
+                css_class='row')
+        )
+
+        i = 1
         for f, f_actual in fields:
+            self.fields[f].label = False
+            self.fields[f_actual].label = False
+            label = Person._meta.get_field(f).verbose_name
+            row_color = '' if i % 2 else ' bg-light'
             layout.append(
                 Div(
-                    Div(f, css_class='col-md-6'),
-                    Div(f_actual, css_class='col-md-6'),
-                    css_class='row')
+                    Div(HTML("<label>{0}</label>".format(label)), css_class="col"),
+                    css_class='row pt-2' + row_color
+                )
             )
+            layout.append(
+                Div(
+                    Div(f, css_class='col'),
+                    Div(
+                        Button('copy', "=>", css_class='btn',  onclick="javascript:copy_data('id_{0}','id_{1}')".format(f, f_actual)),
+                        css_class='col-md-auto'
+                    ),
+                    Div(f_actual, css_class='col'),
+                    css_class='row' + row_color)
+            )
+            i += 1
         layout.append(Div(Div('notes', css_class='col-12'),css_class='row'))
         layout.append(Submit('submit', _('Сохранить'), css_class='btn btn-primary'))
         self.helper.layout = layout
