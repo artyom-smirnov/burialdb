@@ -5,7 +5,10 @@ $( document ).ready(function() {
 function clickable_rows()
 {
     $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
+        if ($(this).data("target") === "_blank")
+            window.open($(this).data("href"), "_blank");
+        else
+            window.location = $(this).data("href");
     });
 }
 
