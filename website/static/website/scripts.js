@@ -1,9 +1,13 @@
 $( document ).ready(function() {
+    clickable_rows();
+});
+
+function clickable_rows()
+{
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
-});
-
+}
 
 function activate_pagination(page, load_more_url, list_element) {
     var current_page = page;
@@ -22,6 +26,7 @@ function activate_pagination(page, load_more_url, list_element) {
             success: function (data) {
                 current_page += 1;
                 list_element.after(data.content);
+                clickable_rows();
             },
             error: function () {
                 load_more = function () {
