@@ -17,6 +17,8 @@ class PersonCreateEditForm(forms.ModelForm):
         fields = Person.get_pair_card_fields()
         layout = Layout()
 
+        layout.append(Div(Div('ontombstone', css_class='col-12'), css_class='row'))
+
         layout.append(
             Div(
                 Div(HTML("<b>Первичные данные</b>"), css_class='col text-center'),
@@ -24,7 +26,7 @@ class PersonCreateEditForm(forms.ModelForm):
                 css_class='row')
         )
 
-        i = 1
+        i = 0
         for f, f_actual in fields:
             self.fields[f].label = False
             self.fields[f_actual].label = False

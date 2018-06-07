@@ -66,6 +66,8 @@ class Person(models.Model):
 
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
 
+    ontombstone = models.CharField(max_length=1024, blank=True, null=True, verbose_name='На памятнике')
+
     cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Кладбище')
     cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное кладбище')
 
@@ -119,6 +121,10 @@ class Person(models.Model):
 
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
+    _single_mapped_fields = [
+        'ontombstone'
+    ]
+
     _mapped_fields = [
         'fio',
         'year',
@@ -152,6 +158,8 @@ class Person(models.Model):
             return self.fio_actual
         elif self.fio:
             return self.fio
+        elif self.ontombstone:
+            return self.ontombstone
         else:
             return 'Неизвестный'
 
@@ -160,7 +168,7 @@ class Person(models.Model):
 
     @classmethod
     def get_mapped_fields(cls):
-        return cls._mapped_fields
+        return cls._single_mapped_fields + cls._mapped_fields
 
     @classmethod
     def get_pair_card_fields(cls):
