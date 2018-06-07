@@ -72,8 +72,8 @@ class Person(models.Model):
     hospital = models.CharField(max_length=255, blank=True, null=True, verbose_name='Госпиталь')
     hospital_actual = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital_actual', verbose_name='Актуальный госпиталь')
 
-    fio = models.CharField(max_length=255, blank=True, null=True, verbose_name='ФИО')
-    fio_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальные ФИО')
+    fio = models.CharField(max_length=255, blank=True, null=True, verbose_name='ФИО (список, прочие источники)')
+    fio_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальные ФИО (список, прочие источники)')
 
     year = models.CharField(max_length=255, null=True, blank=True, verbose_name='Год рождения')
     year_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный год рождения')
