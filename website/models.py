@@ -85,7 +85,63 @@ class PersonManager(models.Manager):
                     default=None,
                     output_field=CharField()
                 )
-            )
+            ),
+            screen_born_region=Coalesce(
+                Case(
+                    When(born_region_actual__exact='', then=None),
+                    When(born_region_actual__isnull=False, then='born_region_actual'),
+                    default=None,
+                    output_field=CharField()
+                ),
+                Case(
+                    When(born_region__exact='', then=None),
+                    When(born_region__isnull=False, then='born_region'),
+                    default=None,
+                    output_field=CharField()
+                )
+            ),
+            screen_born_address=Coalesce(
+                Case(
+                    When(born_address_actual__exact='', then=None),
+                    When(born_address_actual__isnull=False, then='born_address_actual'),
+                    default=None,
+                    output_field=CharField()
+                ),
+                Case(
+                    When(born_address__exact='', then=None),
+                    When(born_address__isnull=False, then='born_address'),
+                    default=None,
+                    output_field=CharField()
+                )
+            ),
+            screen_address=Coalesce(
+                Case(
+                    When(address_actual__exact='', then=None),
+                    When(address_actual__isnull=False, then='address_actual'),
+                    default=None,
+                    output_field=CharField()
+                ),
+                Case(
+                    When(address__exact='', then=None),
+                    When(address__isnull=False, then='address'),
+                    default=None,
+                    output_field=CharField()
+                )
+            ),
+            screen_military_unit=Coalesce(
+                Case(
+                    When(military_unit_actual__exact='', then=None),
+                    When(military_unit_actual__isnull=False, then='military_unit_actual'),
+                    default=None,
+                    output_field=CharField()
+                ),
+                Case(
+                    When(military_unit__exact='', then=None),
+                    When(military_unit__isnull=False, then='military_unit'),
+                    default=None,
+                    output_field=CharField()
+                )
+            ),
         )
 
         return q
@@ -193,6 +249,26 @@ class Person(models.Model):
             return self.ontombstone
         else:
             return 'Неизвестный'
+
+    def living_place(self):
+        l = list(filter(lambda item: item, [self.screen_born_region, self.screen_born_address, self.screen_address]))
+        return ', '.join(l)
+
+    # TODO: Rework with COALESCE
+    def screen_year(self):
+        if self.year_actual:
+            return self.year_actual
+        elif self.year:
+            return self.year
+        return None
+
+    # TODO: Rework with COALESCE
+    def screen_death_date(self):
+        if self.death_date_actual:
+            return self.death_date_actual
+        elif self.death_date:
+            return self.death_date
+        return None
 
     def get_absolute_url(self):
         return reverse('person_detail', kwargs={'pk': self.pk})
