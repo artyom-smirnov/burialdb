@@ -121,7 +121,7 @@ class CemeteryDetailView(DetailWithListView):
 
     def get_list_queryset(self):
         obj = super().get_object()
-        return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj)))
+        return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj))).order_by('screen_name')
 
 
 class CemeteryCreateView(CommonCreateEditView):
@@ -172,7 +172,7 @@ class HospitalDetailView(DetailWithListView):
 
     def get_list_queryset(self):
         obj = super().get_object()
-        return Person.objects.filter(Q(hospital=obj) | Q(hospital_actual=obj))
+        return Person.objects.filter(Q(hospital=obj) | Q(hospital_actual=obj)).order_by('screen_name')
 
 
 class HospitalCreateView(CommonCreateEditView):
@@ -209,7 +209,7 @@ class PersonsView(BaseListView):
     page_title = 'Люди'
 
     def get_queryset(self):
-        return Person.objects.filter(active_import=None)
+        return Person.objects.filter(active_import=None).order_by('screen_name')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

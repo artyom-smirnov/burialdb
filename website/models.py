@@ -2,6 +2,8 @@ import datetime
 import os
 
 from django.db import models
+from django.db.models import Case, When, CharField
+from django.db.models.functions import Coalesce
 from django.urls import reverse
 
 
@@ -57,6 +59,36 @@ class Hospital(models.Model):
 
     def get_absolute_url(self):
         return reverse('hospital_detail', kwargs={'pk': self.pk})
+
+
+class PersonManager(models.Manager):
+    def get_queryset(self):
+        q = super(PersonManager, self).get_queryset()
+
+        q = q.annotate(
+            screen_name=Coalesce(
+                Case(
+                    When(fio_actual__exact='', then=None),
+                    When(fio_actual__isnull=False, then='fio_actual'),
+                    default=None,
+                    output_field=CharField()
+                ),
+                Case(
+                    When(fio__exact='', then=None),
+                    When(fio__isnull=False, then='fio'),
+                    default=None,
+                    output_field=CharField()
+                ),
+                Case(
+                    When(ontombstone__exact='', then=None),
+                    When(ontombstone__isnull=False, then='ontombstone'),
+                    default=None,
+                    output_field=CharField()
+                )
+            )
+        )
+
+        return q
 
 
 class Person(models.Model):
@@ -147,8 +179,7 @@ class Person(models.Model):
     _pair_card_fields = _mapped_fields + ['cemetery']
     _other_card_fields = ['notes']
 
-    class Meta:
-        ordering = ["fio"]
+    objects = PersonManager()
 
     def __str__(self):
         return self.name()
