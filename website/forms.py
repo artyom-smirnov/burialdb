@@ -17,6 +17,8 @@ class PersonCreateEditForm(forms.ModelForm):
         fields = Person.get_pair_card_fields()
         layout = Layout()
 
+        self.fields['ontombstone'].widget.attrs['tabindex'] = 1
+        self.fields['ontombstone'].widget.attrs['autofocus'] = 1
         layout.append(Div(Div('ontombstone', css_class='col-12'), css_class='row'))
 
         layout.append(
@@ -28,7 +30,9 @@ class PersonCreateEditForm(forms.ModelForm):
 
         i = 0
         for f, f_actual in fields:
+            self.fields[f].widget.attrs['tabindex'] = 2
             self.fields[f].label = False
+            self.fields[f_actual].widget.attrs['tabindex'] = 5
             self.fields[f_actual].label = False
             label = Person._meta.get_field(f).verbose_name
             row_color = '' if i % 2 else ' bg-light'
@@ -49,8 +53,10 @@ class PersonCreateEditForm(forms.ModelForm):
                     css_class='row' + row_color)
             )
             i += 1
-        layout.append(Div(Div('notes', css_class='col-12'),css_class='row'))
-        layout.append(Submit('submit', _('Сохранить'), css_class='btn btn-primary'))
+
+        self.fields['notes'].widget.attrs['tabindex'] = 3
+        layout.append(Div(Div('notes', css_class='col-12'), css_class='row'))
+        layout.append(Submit('submit', _('Сохранить'), css_class='btn btn-primary', tabindex=4))
         self.helper.layout = layout
 
     class Meta:
