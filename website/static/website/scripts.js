@@ -28,7 +28,7 @@ function activate_pagination(page, load_more_url, list_element) {
             contentType: "application/json",
             success: function (data) {
                 current_page += 1;
-                list_element.after(data.content);
+                $('#' + list_element + ' tr:last').after(data.content);
                 clickable_rows();
             },
             error: function () {

@@ -30,5 +30,5 @@
 {% endblock %}
 
 {% block script %}
-<script>activate_pagination({{ page_obj.number }}, '{% url 'persons' %}', $("#paginated_list tr:last"));</script>
+<script>activate_pagination({{ page_obj.number }}, '{% url 'persons' %}', 'paginated_list');</script>
 {% endblock %}
