@@ -21,7 +21,7 @@ from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm
 from website.importer import ImporterFactory
 from website.models import Person, Cemetery, Hospital, Import
 
-PAGINATE_BY = 25
+PAGINATE_BY = 50
 
 
 class CommonViewMixin(ContextMixin):
@@ -106,6 +106,17 @@ class CemeteriesListView(BaseListView):
     page_title = 'Захоронения'
     navbar = 'burials'
 
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            self.object_list = self.get_queryset()
+            allow_empty = self.get_allow_empty()
+            context = self.get_context_data()
+            content = loader.render_to_string('website/snippets/cemetery_list_rows.html', context, request)
+            return JsonResponse({"content": content})
+        else:
+            return super().get(request, args, kwargs)
+
+
 
 class CemeteryDetailView(DetailWithListView):
     model = Cemetery
@@ -168,6 +179,16 @@ class HospitalsView(BaseListView):
 
     def get_queryset(self):
         return Hospital.objects.filter()
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            self.object_list = self.get_queryset()
+            allow_empty = self.get_allow_empty()
+            context = self.get_context_data()
+            content = loader.render_to_string('website/snippets/hospitals_list_rows.html', context, request)
+            return JsonResponse({"content": content})
+        else:
+            return super().get(request, args, kwargs)
 
 
 class HospitalDetailView(DetailWithListView):

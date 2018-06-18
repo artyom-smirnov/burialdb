@@ -10,10 +10,8 @@
         {% if hospital_list %}
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
-                <tbody>
-                {% for hospital in hospital_list %}
-                    <tr class="clickable-row" data-href="{% url 'hospital_detail' hospital.id %}"><td>{{ hospital.name }}</td></tr>
-                {% endfor %}
+                <tbody id="paginated_list">
+                    {% include 'website/snippets/hospitals_list_rows.html' with hospital_list=hospital_list %}
                 </tbody>
             </table>
         </div>
@@ -23,6 +21,8 @@
         </div>
         {% endif %}
     </div>
+{% endblock %}
 
-    {% include 'website/snippets/pagination.html' %}
+{% block script %}
+<script>activate_pagination({{ page_obj.number }}, window.location.href, 'paginated_list');</script>
 {% endblock %}

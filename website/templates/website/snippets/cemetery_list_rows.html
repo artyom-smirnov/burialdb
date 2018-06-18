@@ -1,0 +1,3 @@
+{% for cemetery in cemetery_list %}
+    <tr class="clickable-row" data-href="{% url 'cemetery_detail' cemetery.id %}"><td>{{ cemetery.name }}</td></tr>
+{% endfor %}

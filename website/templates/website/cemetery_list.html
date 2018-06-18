@@ -10,10 +10,8 @@
         {% if cemetery_list %}
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
-                <tbody>
-                {% for cemetery in cemetery_list %}
-                    <tr class="clickable-row" data-href="{% url 'cemetery_detail' cemetery.id %}"><td>{{ cemetery.name }}</td></tr>
-                {% endfor %}
+                <tbody id="paginated_list">
+                    {% include 'website/snippets/cemetery_list_rows.html' with cemetery_list=cemetery_list %}
                 </tbody>
             </table>
         </div>
@@ -23,6 +21,8 @@
         </div>
         {% endif %}
     </div>
+{% endblock %}
 
-    {% include 'website/snippets/pagination.html' %}
+{% block script %}
+<script>activate_pagination({{ page_obj.number }}, window.location.href, 'paginated_list');</script>
 {% endblock %}
