@@ -45,3 +45,7 @@ function copy_data(from, to)
     t_elem = $('#'+to);
     t_elem.val(f_elem.val());
 }
+
+function reset_search() {
+    window.location = location.protocol + '//' + location.host + location.pathname;
+}

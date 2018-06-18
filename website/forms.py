@@ -169,3 +169,18 @@ class CemeteryCreateEditForm(forms.ModelForm):
     class Meta:
         model = Cemetery
         fields = ['name']
+
+
+class PersonSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(PersonSearchForm, self).__init__(*args, **kwargs)
+
+        self.fields['fio'] = forms.CharField(required=False)
+        self.fields['fio'].label = 'ФИО'
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div('fio'),
+            Submit('submit', 'Искать', css_class='btn btn-primary'),
+            Button('copy', "Сброс", css_class='btn', onclick="javascript:reset_search()"),
+        )

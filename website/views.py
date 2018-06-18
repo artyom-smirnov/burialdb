@@ -16,7 +16,7 @@ from django.views.generic.detail import BaseDetailView
 from django.views.generic.edit import FormMixin
 
 from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
-    CemeteryCreateEditForm
+    CemeteryCreateEditForm, PersonSearchForm
 from website.importer import ImporterFactory
 from website.models import Person, Cemetery, Hospital, Import
 
@@ -207,13 +207,22 @@ class PersonsView(BaseListView):
     context_object_name = 'person_list'
     navbar = 'persons'
     page_title = 'Люди'
+    form_class = PersonSearchForm
 
     def get_queryset(self):
-        return Person.objects.filter(active_import=None).order_by('screen_name')
+        form = self.form_class(self.request.GET)
+        q = Person.objects.filter(active_import=None).order_by('screen_name')
+        if form.is_valid():
+            q = q.filter(
+                Q(fio__icontains=form.cleaned_data['fio']) |
+                Q(fio_actual__icontains=form.cleaned_data['fio'])
+            )
+        return q
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['have_imports'] = Import.objects.count() > 0
+        context['search_form'] = self.form_class(self.request.GET)
         return context
 
     def get(self, request, *args, **kwargs):
