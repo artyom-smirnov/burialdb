@@ -235,6 +235,11 @@ class Person(models.Model):
     _pair_card_fields = _mapped_fields + ['cemetery']
     _other_card_fields = ['notes']
 
+    _search_mapping = {
+        'fio': ['fio', 'fio_actual'],
+        'born_year': ['year', 'year_actual']
+    }
+
     objects = PersonManager()
 
     def __str__(self):
@@ -288,6 +293,10 @@ class Person(models.Model):
     @classmethod
     def translate_mapped_field_value(cls, field_name, value, active_import=None):
         return value
+
+    @classmethod
+    def get_search_mapping(cls):
+        return cls._search_mapping
 
     def get_status(self):
         have_some = False

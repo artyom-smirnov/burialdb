@@ -213,10 +213,14 @@ class PersonsView(BaseListView):
         form = self.form_class(self.request.GET)
         q = Person.objects.filter(active_import=None).order_by('screen_name')
         if form.is_valid():
-            q = q.filter(
-                Q(fio__icontains=form.cleaned_data['fio']) |
-                Q(fio_actual__icontains=form.cleaned_data['fio'])
-            )
+            for k, v in Person.get_search_mapping().items():
+                if form.cleaned_data[k]:
+                    val = form.cleaned_data[k]
+                    filter = Q()
+                    for field in v:
+                        args = {field + '__icontains': val}
+                        filter |= Q(**args)
+                    q = q.filter(filter)
         return q
 
     def get_context_data(self, *, object_list=None, **kwargs):

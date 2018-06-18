@@ -1,7 +1,7 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Layout, Submit, Button, HTML
+from crispy_forms.layout import Div, Layout, Submit, Button, HTML, ButtonHolder
 
 from website.models import Person, Import, Hospital, Cemetery
 
@@ -178,9 +178,17 @@ class PersonSearchForm(forms.Form):
         self.fields['fio'] = forms.CharField(required=False)
         self.fields['fio'].label = 'ФИО'
 
+        self.fields['born_year'] = forms.CharField(required=False)
+        self.fields['born_year'].label = 'Год рождения'
+
         self.helper = FormHelper()
+        self.helper.disable_csrf = True
+
         self.helper.layout = Layout(
             Div('fio'),
-            Submit('submit', 'Искать', css_class='btn btn-primary'),
-            Button('copy', "Сброс", css_class='btn', onclick="javascript:reset_search()"),
+            Div('born_year'),
+            ButtonHolder(
+                Submit('submit', 'Искать', css_class='btn btn-primary'),
+                Button('copy', "Сброс", css_class='btn', onclick="javascript:reset_search()"),
+            )
         )
