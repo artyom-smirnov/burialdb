@@ -14,6 +14,7 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import BaseDetailView
 from django.views.generic.edit import FormMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
     CemeteryCreateEditForm, PersonSearchForm
@@ -42,7 +43,7 @@ class CommonViewMixin(ContextMixin):
         return super(CommonViewMixin, self).dispatch(*args, **kwargs)
 
 
-class CommonPaginatedViewMixin(CommonViewMixin):
+class CommonPaginatedViewMixin(MultipleObjectMixin, CommonViewMixin):
     paginate_by = PAGINATE_BY
 
 
@@ -57,25 +58,21 @@ class DetailWithListView(CommonPaginatedViewMixin, DetailView):
         return self.list_model.objects.all()
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        request_page = self.request.GET.get("page")
         queryset = self.get_list_queryset()
-        objects_paginator = paginator.Paginator(queryset, PAGINATE_BY)
-        try:
-            page = objects_paginator.page(request_page)
-        except paginator.PageNotAnInteger:
-            page = objects_paginator.page(1)
-        except paginator.EmptyPage:
-            if int(request_page) < 1:
-                page = objects_paginator.page(1)
-            else:
-                page = objects_paginator.page(objects_paginator.num_pages)
+        objects_paginator, page, objects_list, has_other_pages = self.paginate_queryset(queryset, PAGINATE_BY)
 
+        context = {}
+        context['object'] = self.object
+        context_object_name = self.get_context_object_name(self.object)
+        if context_object_name:
+            context[context_object_name] = self.object
         context['page_obj'] = page
         context['paginator'] = objects_paginator
         context['is_paginated'] = True if objects_paginator.num_pages > 1 else False
-        return context
+        context['list_obj'] = objects_list
+
+        context.update(kwargs)
+        return super().get_context_data(**context)
 
 
 class CommonCreateEditView(CommonViewMixin, CreateView):
@@ -122,6 +119,18 @@ class CemeteryDetailView(DetailWithListView):
     def get_list_queryset(self):
         obj = super().get_object()
         return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj))).order_by('screen_name')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object_list = self.get_list_queryset()
+        if request.is_ajax():
+            context = self.get_context_data(object=self.object)
+            context['person_list'] = context['list_obj']
+            content = loader.render_to_string('website/snippets/person_list_rows.html', context, request)
+            return JsonResponse({"content": content})
+        else:
+            return super().get(request, args, kwargs)
+
 
 
 class CemeteryCreateView(CommonCreateEditView):
@@ -173,6 +182,17 @@ class HospitalDetailView(DetailWithListView):
     def get_list_queryset(self):
         obj = super().get_object()
         return Person.objects.filter(Q(hospital=obj) | Q(hospital_actual=obj)).order_by('screen_name')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object_list = self.get_list_queryset()
+        if request.is_ajax():
+            context = self.get_context_data(object=self.object)
+            context['person_list'] = context['list_obj']
+            content = loader.render_to_string('website/snippets/person_list_rows.html', context, request)
+            return JsonResponse({"content": content})
+        else:
+            return super().get(request, args, kwargs)
 
 
 class HospitalCreateView(CommonCreateEditView):
