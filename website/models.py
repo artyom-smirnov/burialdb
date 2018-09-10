@@ -307,10 +307,19 @@ class Person(models.Model):
         return cls._search_mapping
 
     def get_status(self):
+        skipped_some = False
         have_some = False
         for f, f_actual in self.get_pair_card_fields():
             if self.__getattribute__(f_actual):
                 have_some = True
-            elif have_some:
+            else:
+                skipped_some = True
+            if have_some and skipped_some:
                 return self.PARTIAL
-        return self.COMPLETE if have_some else self.INCOMPLETE
+
+        if have_some and not skipped_some:
+            return self.COMPLETE
+        elif have_some and skipped_some:
+            return self.PARTIAL
+        else:
+            return self.INCOMPLETE
