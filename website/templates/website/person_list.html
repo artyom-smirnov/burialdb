@@ -37,10 +37,11 @@
                         <th scope="col">Адрес</th>
                         <th scope="col">Часть</th>
                         <th scope="col">Скончался</th>
+                        <th scope="col">Кладбище</th>
                     </tr>
                 </thead>
                 <tbody id="paginated_list">
-                    {% include 'website/snippets/person_list_rows.html' with person_list=person_list %}
+                    {% include 'website/snippets/person_list_rows.html' with person_list=person_list show_cemetery=True %}
                 </tbody>
             </table>
         </div>

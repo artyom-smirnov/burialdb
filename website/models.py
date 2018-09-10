@@ -275,6 +275,14 @@ class Person(models.Model):
             return self.death_date
         return None
 
+    # TODO: Rework with COALESCE
+    def screen_cemetery(self):
+        if self.cemetery_actual:
+            return self.cemetery_actual
+        elif self.cemetery:
+            return self.cemetery
+        return None
+
     def get_absolute_url(self):
         return reverse('person_detail', kwargs={'pk': self.pk})
 
@@ -306,5 +314,3 @@ class Person(models.Model):
             elif have_some:
                 return self.PARTIAL
         return self.COMPLETE if have_some else self.INCOMPLETE
-
-

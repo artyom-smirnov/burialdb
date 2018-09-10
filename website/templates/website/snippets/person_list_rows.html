@@ -6,5 +6,6 @@
     <td>{% if person.living_place %}{{ person.living_place }}{% endif %}</td>
     <td>{% if person.screen_military_unit %}{{ person.screen_military_unit }}{% endif %}</td>
     <td>{% if person.screen_death_date %}{{ person.screen_death_date }}{% endif %}</td>
+    {% if show_cemetery %}<td>{% if person.screen_cemetery %}{{ person.screen_cemetery }}{% endif %}</td>{% endif %}
 </tr>
 {% endfor %}

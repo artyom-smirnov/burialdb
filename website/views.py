@@ -268,6 +268,7 @@ class PersonsView(BaseListView):
         context = super().get_context_data(**kwargs)
         context['have_imports'] = Import.objects.count() > 0
         context['search_form'] = self.form_class(self.request.GET)
+        context['show_cemetery'] = True
         return context
 
     def get(self, request, *args, **kwargs):
