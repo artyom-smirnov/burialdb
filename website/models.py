@@ -323,3 +323,12 @@ class Person(models.Model):
             return self.PARTIAL
         else:
             return self.INCOMPLETE
+
+    def save(self, *args, **kwargs):
+        if self.ontombstone:
+            self.ontombstone = self.ontombstone.title()
+        if self.fio:
+            self.fio = self.fio.title()
+        if self.fio_actual:
+            self.fio_actual = self.fio_actual.title()
+        super(Person, self).save(*args, **kwargs)
