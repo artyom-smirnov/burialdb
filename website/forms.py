@@ -16,9 +16,12 @@ class PersonCreateEditForm(forms.ModelForm):
 
         fields = Person.get_pair_card_fields()
         layout = Layout()
-
         self.fields['ontombstone'].widget.attrs['tabindex'] = 1
         self.fields['ontombstone'].widget.attrs['autofocus'] = 1
+        self.fields['ontombstone'].widget.attrs['style'] = "text-transform:capitalize"
+        self.fields['fio'].widget.attrs['style'] = "text-transform:capitalize"
+        self.fields['fio_actual'].widget.attrs['style'] = "text-transform:capitalize"
+
         layout.append(Div(Div('ontombstone', css_class='col-12'), css_class='row'))
 
         layout.append(
