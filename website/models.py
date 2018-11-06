@@ -236,7 +236,7 @@ class Person(models.Model):
     _other_card_fields = ['notes']
 
     _search_mapping = {
-        'fio': ['fio', 'fio_actual'],
+        'fio': ['fio', 'fio_actual', 'ontombstone'],
         'born_year': ['year', 'year_actual']
     }
 
