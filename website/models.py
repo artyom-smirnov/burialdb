@@ -192,6 +192,8 @@ class Person(models.Model):
     relatives = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Родственники')
     relatives_actual = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Актуальные родственники')
 
+    mia = models.BooleanField(default=False, verbose_name='Пропал без вести')
+
     receipt_date = models.CharField(max_length=255, blank=True, null=True, verbose_name='Дата поступления')
     receipt_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата поступления')
 
@@ -210,7 +212,8 @@ class Person(models.Model):
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
     _single_mapped_fields = [
-        'ontombstone'
+        'ontombstone',
+        'mia'
     ]
 
     _mapped_fields = [
@@ -232,7 +235,16 @@ class Person(models.Model):
         'grave'
     ]
 
-    _pair_card_fields = _mapped_fields + ['cemetery']
+    _hide_if_mia = [
+        'hospital',
+        'receipt_date',
+        'receipt_cause',
+        'death_date',
+        'death_cause',
+        'grave'
+    ]
+
+    _pair_card_fields = ['cemetery'] + _mapped_fields
     _other_card_fields = ['notes']
 
     _search_mapping = {

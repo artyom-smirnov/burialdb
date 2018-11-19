@@ -1,5 +1,10 @@
 $( document ).ready(function() {
     clickable_rows();
+    check_mia();
+
+    $("#id_mia").change(function() {
+        check_mia();
+    });
 });
 
 function clickable_rows()
@@ -48,4 +53,19 @@ function copy_data(from, to)
 
 function reset_search() {
     window.location = location.protocol + '//' + location.host + location.pathname;
+}
+
+function check_mia() {
+    mia_cb = $('#id_mia');
+    if (mia_cb.length)
+    {
+        if(mia_cb.is(':checked'))
+        {
+            $('.hide-if-mia').addClass('d-none');
+        }
+        else
+        {
+            $('.hide-if-mia').removeClass('d-none');
+        }
+    }
 }

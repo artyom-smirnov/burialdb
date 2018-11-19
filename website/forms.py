@@ -23,6 +23,7 @@ class PersonCreateEditForm(forms.ModelForm):
         self.fields['fio_actual'].widget.attrs['style'] = "text-transform:capitalize"
 
         layout.append(Div(Div('ontombstone', css_class='col-12'), css_class='row'))
+        layout.append(Div(Div('mia', css_class='col-12'), css_class='row'))
 
         layout.append(
             Div(
@@ -33,6 +34,10 @@ class PersonCreateEditForm(forms.ModelForm):
 
         i = 0
         for f, f_actual in fields:
+            hide_if_mia = ''
+            if f in Person._hide_if_mia:
+                hide_if_mia = ' hide-if-mia'
+            print(f, hide_if_mia)
             self.fields[f].widget.attrs['tabindex'] = 2
             self.fields[f].label = False
             self.fields[f_actual].widget.attrs['tabindex'] = 5
@@ -42,7 +47,7 @@ class PersonCreateEditForm(forms.ModelForm):
             layout.append(
                 Div(
                     Div(HTML("<label>{0}</label>".format(label)), css_class="col"),
-                    css_class='row pt-2' + row_color
+                    css_class='row pt-2' + row_color + hide_if_mia
                 )
             )
             layout.append(
@@ -53,7 +58,7 @@ class PersonCreateEditForm(forms.ModelForm):
                         css_class='col-md-auto'
                     ),
                     Div(f_actual, css_class='col'),
-                    css_class='row' + row_color)
+                    css_class='row' + row_color + hide_if_mia)
             )
             i += 1
 
