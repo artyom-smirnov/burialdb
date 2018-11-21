@@ -160,6 +160,7 @@ class Person(models.Model):
         (0, 'Лечился'),
         (1, 'Пропал без вести'),
         (2, 'Убит'),
+        (3, 'Умер по пути в госпиталь'),
     )
 
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
