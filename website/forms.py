@@ -193,6 +193,7 @@ class PersonSearchForm(forms.Form):
 
         self.helper = FormHelper()
         self.helper.disable_csrf = True
+        self.helper.form_method = 'GET'
 
         self.helper.layout = Layout(
             Div('fio'),
