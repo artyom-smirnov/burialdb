@@ -152,9 +152,21 @@ class Person(models.Model):
     PARTIAL = 1
     COMPLETE = 2
 
+    TREATED = 0
+    MIA = 1
+    KILLED = 2
+
+    STATES = (
+        (0, 'Лечился'),
+        (1, 'Пропал без вести'),
+        (2, 'Убит'),
+    )
+
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
 
     ontombstone = models.CharField(max_length=1024, blank=True, null=True, verbose_name='На памятнике')
+
+    state = models.IntegerField(choices=STATES, default=TREATED, verbose_name='Категория')
 
     cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Кладбище')
     cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное кладбище')
@@ -192,8 +204,6 @@ class Person(models.Model):
     relatives = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Родственники')
     relatives_actual = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Актуальные родственники')
 
-    mia = models.BooleanField(default=False, verbose_name='Пропал без вести')
-
     receipt_date = models.CharField(max_length=255, blank=True, null=True, verbose_name='Дата поступления')
     receipt_date_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата поступления')
 
@@ -213,7 +223,7 @@ class Person(models.Model):
 
     _single_mapped_fields = [
         'ontombstone',
-        'mia'
+        'state',
     ]
 
     _mapped_fields = [
@@ -242,6 +252,13 @@ class Person(models.Model):
         'death_date',
         'death_cause',
         'grave'
+    ]
+
+    _hide_if_killed = [
+        'hospital',
+        'receipt_date',
+        'receipt_cause',
+        'death_cause',
     ]
 
     _pair_card_fields = ['cemetery'] + _mapped_fields

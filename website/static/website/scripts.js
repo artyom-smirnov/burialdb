@@ -1,9 +1,9 @@
 $( document ).ready(function() {
     clickable_rows();
-    check_mia();
+    check_state();
 
-    $("#id_mia").change(function() {
-        check_mia();
+    $("#id_state").change(function() {
+        check_state();
     });
 });
 
@@ -55,17 +55,23 @@ function reset_search() {
     window.location = location.protocol + '//' + location.host + location.pathname;
 }
 
-function check_mia() {
-    mia_cb = $('#id_mia');
-    if (mia_cb.length)
+function check_state() {
+    var state = $('#id_state');
+    if (state)
     {
-        if(mia_cb.is(':checked'))
-        {
-            $('.hide-if-mia').addClass('d-none');
-        }
-        else
-        {
-            $('.hide-if-mia').removeClass('d-none');
+        switch (parseInt(state.val())) {
+            case 1:
+                $('.hide-if-killed').removeClass('d-none');
+                $('.hide-if-mia').addClass('d-none');
+                break;
+            case 2:
+                $('.hide-if-mia').removeClass('d-none');
+                $('.hide-if-killed').addClass('d-none');
+                break;
+            default:
+                $('.hide-if-killed').removeClass('d-none');
+                $('.hide-if-mia').removeClass('d-none');
+                break;
         }
     }
 }
