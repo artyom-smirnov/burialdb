@@ -39,7 +39,6 @@ class PersonCreateEditForm(forms.ModelForm):
                 additional_classes += ' hide-if-mia'
             if f in Person._hide_if_killed:
                 additional_classes += ' hide-if-killed'
-            print(f, additional_classes)
             self.fields[f].widget.attrs['tabindex'] = 2
             self.fields[f].label = False
             self.fields[f_actual].widget.attrs['tabindex'] = 5
