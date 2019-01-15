@@ -155,12 +155,15 @@ class Person(models.Model):
     TREATED = 0
     MIA = 1
     KILLED = 2
+    DEADINROAD = 3
+    DEADINCAPTIVITY = 4
 
     STATES = (
-        (0, 'Лечился'),
-        (1, 'Пропал без вести'),
-        (2, 'Убит'),
-        (3, 'Умер по пути в госпиталь'),
+        (TREATED, 'Лечился'),
+        (MIA, 'Пропал без вести'),
+        (KILLED, 'Убит'),
+        (DEADINROAD, 'Умер по пути в госпиталь'),
+        (DEADINCAPTIVITY, 'Погиб в плену'),
     )
 
     active_import = models.ForeignKey(Import, null=True, blank=True, on_delete=models.SET_NULL)
@@ -220,6 +223,18 @@ class Person(models.Model):
     grave = models.CharField(max_length=255, blank=True, null=True, verbose_name='Расположение могилы')
     grave_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное расположение могилы')
 
+    date_of_captivity = models.CharField(max_length=255, blank=True, null=True, verbose_name='Дата пленения')
+    date_of_captivity_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата пленения')
+
+    place_of_captivity = models.CharField(max_length=255, blank=True, null=True, verbose_name='Место пленения')
+    place_of_captivity_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное место пленения')
+
+    camp = models.CharField(max_length=255, blank=True, null=True, verbose_name='Лагерь')
+    camp_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальный лагерь')
+
+    camp_number = models.CharField(max_length=255, null=True, blank=True, verbose_name='Лагерный номер')
+    camp_number_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный лагерный номер')
+
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
     _single_mapped_fields = [
@@ -243,7 +258,18 @@ class Person(models.Model):
         'receipt_cause',
         'death_date',
         'death_cause',
-        'grave'
+        'grave',
+        'date_of_captivity',
+        'place_of_captivity',
+        'camp',
+        'camp_number'
+    ]
+
+    _hide_if_treated = [
+        'date_of_captivity',
+        'place_of_captivity',
+        'camp',
+        'camp_number'
     ]
 
     _hide_if_mia = [
@@ -252,10 +278,32 @@ class Person(models.Model):
         'receipt_cause',
         'death_date',
         'death_cause',
-        'grave'
+        'grave',
+        'date_of_captivity',
+        'place_of_captivity',
+        'camp',
+        'camp_number'
     ]
 
     _hide_if_killed = [
+        'hospital',
+        'receipt_date',
+        'receipt_cause',
+        'death_cause',
+        'date_of_captivity',
+        'place_of_captivity',
+        'camp',
+        'camp_number'
+    ]
+
+    _hide_if_dead_in_road = [
+        'date_of_captivity',
+        'place_of_captivity',
+        'camp',
+        'camp_number'
+    ]
+
+    _hide_if_dead_in_captivity = [
         'hospital',
         'receipt_date',
         'receipt_cause',

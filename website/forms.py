@@ -35,10 +35,17 @@ class PersonCreateEditForm(forms.ModelForm):
         i = 0
         for f, f_actual in fields:
             additional_classes = ''
+            if f in Person._hide_if_treated:
+                additional_classes += ' hide-if-treated'
             if f in Person._hide_if_mia:
                 additional_classes += ' hide-if-mia'
             if f in Person._hide_if_killed:
                 additional_classes += ' hide-if-killed'
+            if f in Person._hide_if_dead_in_road:
+                additional_classes += ' hide-if-deadinroad'
+            if f in Person._hide_if_dead_in_captivity:
+                additional_classes += ' hide-if-deadincaptivity'
+
             self.fields[f].widget.attrs['tabindex'] = 2
             self.fields[f].label = False
             self.fields[f_actual].widget.attrs['tabindex'] = 5

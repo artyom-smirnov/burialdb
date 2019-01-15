@@ -59,18 +59,27 @@ function check_state() {
     var state = $('#id_state');
     if (state)
     {
+        $('.hide-if-treated').removeClass('d-none');
+        $('.hide-if-mia').removeClass('d-none');
+        $('.hide-if-killed').removeClass('d-none');
+        $('.hide-if-deadinroad').removeClass('d-none');
+        $('.hide-if-deadincaptivity').removeClass('d-none');
+
         switch (parseInt(state.val())) {
-            case 1:
-                $('.hide-if-killed').removeClass('d-none');
+            case 0: // website.models.TREATED
+                $('.hide-if-treated').addClass('d-none');
+                break;
+            case 1: // website.models.MIA
                 $('.hide-if-mia').addClass('d-none');
                 break;
-            case 2:
-                $('.hide-if-mia').removeClass('d-none');
+            case 2: // website.models.KILLED
                 $('.hide-if-killed').addClass('d-none');
                 break;
-            default:
-                $('.hide-if-killed').removeClass('d-none');
-                $('.hide-if-mia').removeClass('d-none');
+            case 3: // website.models.DEADINROAD
+                $('.hide-if-deadinroad').addClass('d-none');
+                break;
+            case 4: // website.models.DEADINCAPTIVITY
+                $('.hide-if-deadincaptivity').addClass('d-none');
                 break;
         }
     }
