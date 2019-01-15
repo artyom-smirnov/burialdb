@@ -7,5 +7,6 @@
     <td>{% if person.screen_military_unit %}{{ person.screen_military_unit }}{% endif %}</td>
     <td>{% if person.screen_death_date %}{{ person.screen_death_date }}{% endif %}</td>
     {% if show_cemetery %}<td>{% if person.screen_cemetery %}{{ person.screen_cemetery }}{% endif %}</td>{% endif %}
+    <td>{% if person.notes %}<i class="fa fa-info-circle" data-toggle="popover" data-trigger="hover" title="{{ person.name }}" data-content="{{ person.notes }}"></i>{% endif %}</td>
 </tr>
 {% endfor %}
