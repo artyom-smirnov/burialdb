@@ -235,6 +235,12 @@ class Person(models.Model):
     camp_number = models.CharField(max_length=255, null=True, blank=True, verbose_name='Лагерный номер')
     camp_number_actual = models.IntegerField(null=True, blank=True, verbose_name='Актуальный лагерный номер')
 
+    lost_date = models.CharField(max_length=255, blank=True, null=True, verbose_name='Связь прекращена')
+    lost_date_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальная дата прекращения связи')
+
+    field_post = models.CharField(max_length=255, blank=True, null=True, verbose_name='Полевая почта')
+    field_post_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальная полевая почта')
+
     notes = models.TextField(blank=True, verbose_name='Примечания')
 
     _single_mapped_fields = [
@@ -262,14 +268,18 @@ class Person(models.Model):
         'date_of_captivity',
         'place_of_captivity',
         'camp',
-        'camp_number'
+        'camp_number',
+        'lost_date',
+        'field_post'
     ]
 
     _hide_if_treated = [
         'date_of_captivity',
         'place_of_captivity',
         'camp',
-        'camp_number'
+        'camp_number',
+        'lost_date',
+        'field_post'
     ]
 
     _hide_if_mia = [
@@ -293,14 +303,18 @@ class Person(models.Model):
         'date_of_captivity',
         'place_of_captivity',
         'camp',
-        'camp_number'
+        'camp_number',
+        'lost_date',
+        'field_post'
     ]
 
     _hide_if_dead_in_road = [
         'date_of_captivity',
         'place_of_captivity',
         'camp',
-        'camp_number'
+        'camp_number',
+        'lost_date',
+        'field_post'
     ]
 
     _hide_if_dead_in_captivity = [
@@ -308,6 +322,8 @@ class Person(models.Model):
         'receipt_date',
         'receipt_cause',
         'death_cause',
+        'lost_date',
+        'field_post'
     ]
 
     _pair_card_fields = ['cemetery'] + _mapped_fields
