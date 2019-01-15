@@ -197,13 +197,21 @@ class PersonSearchForm(forms.Form):
         self.fields['born_year'] = forms.CharField(required=False)
         self.fields['born_year'].label = 'Год рождения'
 
+        self.fields['state'] = forms.ChoiceField(choices=((None, ''),) + Person.STATES, required=False)
+        self.fields['state'].label = 'Категория'
+
         self.helper = FormHelper()
         self.helper.disable_csrf = True
         self.helper.form_method = 'GET'
 
         self.helper.layout = Layout(
-            Div('fio'),
-            Div('born_year'),
+            Div(
+                Div('fio', css_class='col-md-4'),
+                Div('born_year', css_class='col-md-4'),
+                Div('state', css_class='col-md-4'),
+                css_class='row'
+            ),
+
             ButtonHolder(
                 Submit('submit', 'Искать', css_class='btn btn-primary'),
                 Button('copy', "Сброс", css_class='btn', onclick="javascript:reset_search()"),

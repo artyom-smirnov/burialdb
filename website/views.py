@@ -259,7 +259,7 @@ class PersonsView(BaseListView):
                     val = form.cleaned_data[k]
                     filter = Q()
                     for field in v:
-                        args = {field + '__icontains': val}
+                        args = {'%s%s' % (field, Person._search_filters_mapping[k]): val}
                         filter |= Q(**args)
                     q = q.filter(filter)
         return q

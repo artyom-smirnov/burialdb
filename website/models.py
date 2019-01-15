@@ -315,8 +315,14 @@ class Person(models.Model):
 
     _search_mapping = {
         'fio': ['fio', 'fio_actual', 'ontombstone'],
-        'born_year': ['year', 'year_actual']
+        'born_year': ['year', 'year_actual'],
+        'state': ['state']
     }
+
+    _search_filters_mapping = {
+        'fio': '__icontains',
+        'born_year': '__contains',
+        'state': ''}
 
     objects = PersonManager()
 
