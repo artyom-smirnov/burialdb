@@ -35,6 +35,8 @@ function activate_pagination(page, load_more_url, list_element) {
                 current_page += 1;
                 $('#' + list_element + ' tr:last').after(data.content);
                 clickable_rows();
+                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="popover"]').popover();
             },
             error: function () {
                 load_more = function () {
