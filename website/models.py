@@ -26,7 +26,7 @@ def default_import_name():
 
 class Import(models.Model):
     name = models.CharField(max_length=255, default=default_import_name)
-    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Захоронение')
+    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Мемориал')
     file = models.FileField(upload_to='import/', verbose_name='Файл для импорта')
     header = models.IntegerField(default=1, verbose_name='Строки заголовка')
     numbering = models.IntegerField(default=1, verbose_name='Колонки нумерации')
@@ -172,8 +172,8 @@ class Person(models.Model):
 
     state = models.IntegerField(choices=STATES, default=TREATED, verbose_name='Категория')
 
-    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Кладбище')
-    cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальное кладбище')
+    cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Мемориал')
+    cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальный мемориал')
 
     hospital = models.CharField(max_length=255, blank=True, null=True, verbose_name='Госпиталь')
     hospital_actual = models.ForeignKey(Hospital, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_hospital_actual', verbose_name='Актуальный госпиталь')

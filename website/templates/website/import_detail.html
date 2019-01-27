@@ -16,9 +16,9 @@
     <div class="card-body">
         {% if not error %}
             {% if import.cemetery %}
-                <p class="card-text">Люди будут добавлены в захоронение {{ import.cemetery.name }}</p>
+                <p class="card-text">Люди будут добавлены в мемориал {{ import.cemetery.name }}</p>
             {% else %}
-                <p class="card-text text-warning">Захоронение не назначено!</p>
+                <p class="card-text text-warning">Мемориал не назначен!</p>
             {% endif %}
         {% else %}
             <p class="card-text text-danger">Не удалось прочитать файл</p>

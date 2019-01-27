@@ -103,7 +103,7 @@ class IndexView(TemplateView):
 class CemeteriesListView(BaseListView):
     model = Cemetery
     context_object_name = 'cemetery_list'
-    page_title = 'Захоронения'
+    page_title = 'Мемориалы'
     navbar = 'burials'
 
     def get(self, request, *args, **kwargs):
@@ -125,7 +125,7 @@ class CemeteryDetailView(DetailWithListView):
     navbar = 'burials'
 
     def get_page_title(self):
-        return 'Захоронение ' + super().get_object().name
+        return 'Мемориал ' + super().get_object().name
 
     def get_list_queryset(self):
         obj = super().get_object()
@@ -148,27 +148,27 @@ class CemeteryCreateView(CommonCreateEditView):
     model = Cemetery
     form_class = CemeteryCreateEditForm
     navbar = 'burials'
-    page_title = 'Добавление нового захоронения'
+    page_title = 'Добавление нового мемориала'
 
 
 class CemeteryEditView(CommonCreateEditView, UpdateView):
     model = Cemetery
     form_class = CemeteryCreateEditForm
     navbar = 'burials'
-    page_title = 'Редактирование захоронения'
+    page_title = 'Редактирование мемориала'
 
     def get_page_title(self):
-        return 'Редактирование захоронения ' + super().get_object().name
+        return 'Редактирование мемориала ' + super().get_object().name
 
 
 class CemeteryDeleteView(CommonDeleteView):
     model = Cemetery
     success_url = reverse_lazy('cemeteries')
     navbar = 'burials'
-    additional_text = 'При удалении захоронения, люди добавленные в него не удалятся!'
+    additional_text = 'При удалении мемориала, люди добавленные в него не удалятся!'
 
     def get_page_title(self):
-        return 'Удаление захоронения ' + super().get_object().name
+        return 'Удаление мемориала ' + super().get_object().name
 
 
 class HospitalsView(BaseListView):
