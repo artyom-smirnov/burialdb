@@ -220,8 +220,8 @@ class Person(models.Model):
     death_cause = models.TextField(blank=True, null=True, verbose_name='Причина смерти')
     death_cause_actual = models.TextField(blank=True, null=True, verbose_name='Актуальная причина смерти')
 
-    grave = models.CharField(max_length=255, blank=True, null=True, verbose_name='Расположение могилы')
-    grave_actual = models.CharField(max_length=255, blank=True, null=True, verbose_name='Актуальное расположение могилы')
+    grave = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Расположение могилы')
+    grave_actual = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Актуальное расположение могилы')
 
     date_of_captivity = models.CharField(max_length=255, blank=True, null=True, verbose_name='Дата пленения')
     date_of_captivity_actual = models.DateTimeField(null=True, blank=True, verbose_name='Актуальная дата пленения')
