@@ -245,7 +245,7 @@ class Person(models.Model):
 
     _single_mapped_fields = [
         'ontombstone',
-        'state',
+        'state'
     ]
 
     _mapped_fields = [
@@ -388,7 +388,7 @@ class Person(models.Model):
 
     @classmethod
     def get_mapped_fields(cls):
-        return cls._single_mapped_fields + cls._mapped_fields
+        return cls._single_mapped_fields + cls._mapped_fields + ['notes']
 
     @classmethod
     def get_pair_card_fields(cls):
