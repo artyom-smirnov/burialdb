@@ -35,8 +35,8 @@
     <form action="{% url 'import_do_cancel' import.id %}" method="post">{% csrf_token %}
         <div class="card-body p-0">
             <table class="table table-sm table-responsive">
-                {% if import_header %}
                 <thead>
+                    {% if import_header %}
                     {% for row in import_header %}
                         <tr>
                             {% for col in row %}
@@ -46,6 +46,7 @@
                             {% endfor %}
                         </tr>
                     {% endfor %}
+                    {% endif %}
                     <tr>
                         {% for _ in numbering %}
                             <th scope="col">Поля</th>
@@ -62,7 +63,6 @@
                         {% endfor %}
                     </tr>
                 </thead>
-                {% endif %}
                 {% if import_data %}
                     {% for row in import_data %}
                         <tr>
