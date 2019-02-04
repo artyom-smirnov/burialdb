@@ -197,7 +197,8 @@ class PersonSearchForm(forms.Form):
         self.fields['born_year'] = forms.CharField(required=False)
         self.fields['born_year'].label = 'Год рождения'
 
-        self.fields['state'] = forms.ChoiceField(choices=((None, ''),) + Person.STATES, required=False)
+        # -1 value - hack for searching rows with is null, see views.PersonsView.get_queryset
+        self.fields['state'] = forms.ChoiceField(choices=((None, ''),(-1, 'Без категории')) + Person.STATES, required=False)
         self.fields['state'].label = 'Категория'
 
         self.helper = FormHelper()

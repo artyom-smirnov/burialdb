@@ -170,7 +170,7 @@ class Person(models.Model):
 
     ontombstone = models.CharField(max_length=1024, blank=True, null=True, verbose_name='На памятнике')
 
-    state = models.IntegerField(choices=STATES, default=TREATED, verbose_name='Категория')
+    state = models.IntegerField(choices=STATES, blank=True, null=True, default=TREATED, verbose_name='Категория')
 
     cemetery = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery', verbose_name='Мемориал')
     cemetery_actual = models.ForeignKey(Cemetery, null=True, blank=True, on_delete=models.SET_NULL, related_name='person_cemetery_actual', verbose_name='Актуальный мемориал')

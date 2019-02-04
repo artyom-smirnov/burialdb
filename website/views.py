@@ -259,7 +259,10 @@ class PersonsView(BaseListView):
                     val = form.cleaned_data[k]
                     filter = Q()
                     for field in v:
-                        args = {'%s%s' % (field, Person._search_filters_mapping[k]): val}
+                        if field == 'state' and val == '-1':
+                            args = {'state__isnull': True}
+                        else:
+                            args = {'%s%s' % (field, Person._search_filters_mapping[k]): val}
                         filter |= Q(**args)
                     q = q.filter(filter)
         return q
@@ -430,7 +433,7 @@ class ImportDoView(FormMixin, BaseDetailView):
                     val = row[1][col]
                     if field == 'state':
                         if val not in [i[0] for i in Person.STATES]:
-                            val = 0
+                            val = None
                     person.__setattr__(field, Person.translate_mapped_field_value(field, val, obj))
                     person.active_import = obj
                 persons.append(person)
