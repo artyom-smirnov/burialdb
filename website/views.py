@@ -432,7 +432,11 @@ class ImportDoView(FormMixin, BaseDetailView):
                 for field, col in data_mapping.items():
                     val = row[1][col]
                     if field == 'state':
-                        if val not in [i[0] for i in Person.STATES]:
+                        try:
+                            val = int(val)
+                            if val not in [i[0] for i in Person.STATES]:
+                                val = None
+                        except:
                             val = None
                     person.__setattr__(field, Person.translate_mapped_field_value(field, val, obj))
                     person.active_import = obj
