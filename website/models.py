@@ -383,6 +383,11 @@ class Person(models.Model):
             return self.cemetery
         return None
 
+    def screen_state(self):
+        if self.state in [0, 1, 2, 3, 4]:
+            return self.STATES[self.state][1]
+        return ''
+
     def get_absolute_url(self):
         return reverse('person_detail', kwargs={'pk': self.pk})
 
