@@ -1,6 +1,7 @@
 {% for person in person_list %}
 <tr class="clickable-row {% if person.get_status == 0 %}table-danger{% elif person.get_status == 1 %}table-warning{% elif person.get_status == 2 %}table-success{% endif %}" data-href="{% url 'person_detail' person.id %}" data-target="_blank">
     <td>{% if not person.ontombstone %}<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Нет на памятнике"></i>{% endif %}</td>
+    <td>{{ start_item_number|add:forloop.counter0 }}</td>
     <td>{{ person.screen_state }}</td>
     <td>{{ person.name }}</td>
     <td>{% if person.screen_year %}{{ person.screen_year }}{% endif %}</td>

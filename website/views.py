@@ -131,6 +131,12 @@ class CemeteryDetailView(DetailWithListView):
         obj = super().get_object()
         return Person.objects.filter(Q(active_import=None) & (Q(cemetery=obj) | Q(cemetery_actual=obj))).order_by('screen_name')
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_count'] = self.get_list_queryset().count
+        context['start_item_number'] = ((context['page_obj'].number - 1) * PAGINATE_BY) + 1
+        return context
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object_list = self.get_list_queryset()
@@ -204,6 +210,12 @@ class HospitalDetailView(DetailWithListView):
         obj = super().get_object()
         return Person.objects.filter(Q(hospital=obj) | Q(hospital_actual=obj)).order_by('screen_name')
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_count'] = self.get_list_queryset().count
+        context['start_item_number'] = ((context['page_obj'].number - 1) * PAGINATE_BY) + 1
+        return context
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object_list = self.get_list_queryset()
@@ -272,6 +284,8 @@ class PersonsView(BaseListView):
         context['have_imports'] = Import.objects.count() > 0
         context['search_form'] = self.form_class(self.request.GET)
         context['show_cemetery'] = True
+        context['total_count'] = self.get_queryset().count
+        context['start_item_number'] = ((context['page_obj'].number - 1) * PAGINATE_BY) + 1
         return context
 
     def get(self, request, *args, **kwargs):
