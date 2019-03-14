@@ -18,6 +18,10 @@
                         <th>На памятнике</th>
                         <td scope="col" colspan="2">{% if person.ontombstone %}{{ person.ontombstone }}{% else %}-{% endif %}</td>
                     </tr>
+                    <tr>
+                        <th>Категория</th>
+                        <td scope="col" colspan="2">{{ person.screen_state }}</td>
+                    </tr>
                     {% endif %}
                     <tr>
                         <th></th>
