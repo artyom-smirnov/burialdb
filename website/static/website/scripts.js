@@ -86,3 +86,24 @@ function check_state() {
         }
     }
 }
+
+function advanced_search_on() {
+    $('#advanced-search-fields').removeClass('d-none');
+    $('#advanced-search-off').removeClass('d-none');
+    $('#advanced-search-on').addClass('d-none');
+    $('input[name=advanced_search]:hidden').val('1');
+}
+
+function advanced_search_off() {
+    $('#advanced-search-fields').addClass('d-none');
+    $('#advanced-search-off').addClass('d-none');
+    $('#advanced-search-on').removeClass('d-none');
+    $('input[name=advanced_search]:hidden').val('0');
+}
+
+function initialize_search() {
+    if ($('input[name=advanced_search]:hidden').val() === '1')
+        advanced_search_on();
+    else
+        advanced_search_off();
+}

@@ -55,5 +55,8 @@
 {% endblock %}
 
 {% block script %}
-<script>activate_pagination({{ page_obj.number }}, window.location.href, 'paginated_list');</script>
+<script>
+    activate_pagination({{ page_obj.number }}, window.location.href, 'paginated_list');
+    initialize_search();
+</script>
 {% endblock %}

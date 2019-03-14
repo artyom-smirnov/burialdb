@@ -1,7 +1,7 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Layout, Submit, Button, HTML, ButtonHolder
+from crispy_forms.layout import Div, Layout, Submit, Button, HTML, ButtonHolder, Hidden
 
 from website.models import Person, Import, Hospital, Cemetery
 
@@ -191,15 +191,17 @@ class PersonSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(PersonSearchForm, self).__init__(*args, **kwargs)
 
-        self.fields['fio'] = forms.CharField(required=False)
-        self.fields['fio'].label = 'ФИО'
+        fields = (
+            ('fio', forms.CharField(required=False), 'ФИО'),
+            ('born_year', forms.CharField(required=False), 'Год рождения'),
+            # -1 value - hack for searching rows with is null, see views.PersonsView.get_queryset
+            ('state', forms.ChoiceField(choices=((None, ''), (-1, 'Без категории')) + Person.STATES, required=False), 'Категория'),
+            ('advanced_search', forms.IntegerField(widget=forms.HiddenInput(), initial=0), '')
+        )
 
-        self.fields['born_year'] = forms.CharField(required=False)
-        self.fields['born_year'].label = 'Год рождения'
-
-        # -1 value - hack for searching rows with is null, see views.PersonsView.get_queryset
-        self.fields['state'] = forms.ChoiceField(choices=((None, ''),(-1, 'Без категории')) + Person.STATES, required=False)
-        self.fields['state'].label = 'Категория'
+        for f in fields:
+            self.fields[f[0]] = f[1]
+            self.fields[f[0]].label = f[2]
 
         self.helper = FormHelper()
         self.helper.disable_csrf = True
@@ -213,8 +215,20 @@ class PersonSearchForm(forms.Form):
                 css_class='row'
             ),
 
+            Div(
+                css_class='row d-none', css_id='advanced-search-fields'
+            ),
+
+            Div(
+                Button('advanced_search_on_btn', "Расширенный поиск", css_class='btn', css_id='advanced-search-on', onclick="javascript:advanced_search_on()"),
+                Button('advanced_search_off_btn', "Обычный поиск", css_class='btn d-none', css_id='advanced-search-off', onclick="javascript:advanced_search_off()"),
+            ),
+
+            'advanced_search',
+
             ButtonHolder(
                 Submit('submit', 'Искать', css_class='btn btn-primary'),
-                Button('copy', "Сброс", css_class='btn', onclick="javascript:reset_search()"),
+                Button('reset', "Сброс", css_class='btn', onclick="javascript:reset_search()"),
+                css_class='mt-3'
             )
         )
