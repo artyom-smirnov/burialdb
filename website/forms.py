@@ -72,7 +72,7 @@ class PersonCreateEditForm(forms.ModelForm):
 
         self.fields['notes'].widget.attrs['tabindex'] = 3
         layout.append(Div(Div('notes', css_class='col-12'), css_class='row'))
-        layout.append(Submit('submit', _('Сохранить'), css_class='btn btn-primary', tabindex=4))
+        layout.append(Div(Submit('submit', _('Сохранить'), css_class='btn btn-primary', tabindex=4), css_class='fixed-submit-button'))
         self.helper.layout = layout
 
     class Meta:

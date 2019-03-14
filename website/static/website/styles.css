@@ -9,3 +9,10 @@
 .clickable-row {
     cursor: pointer;
 }
+
+.fixed-submit-button {
+    position:fixed;
+    bottom:0;
+    padding-bottom: 1em;
+    padding-left: 1em;
+}
