@@ -98,6 +98,7 @@ function advanced_search_off() {
     $('#advanced-search-fields').addClass('d-none');
     $('#advanced-search-off').addClass('d-none');
     $('#advanced-search-on').removeClass('d-none');
+    $('#advanced-search-fields input').val('');
     $('input[name=advanced_search]:hidden').val('0');
 }
 
