@@ -340,7 +340,7 @@ class Person(models.Model):
         'conscription_place': ['conscription_place', 'conscription_place_actual'],
         'military_unit': ['military_unit', 'military_unit_actual'],
         'rank': ['rank', 'rank_actual'],
-        'position': ['rank', 'position_actual'],
+        'position': ['position', 'position_actual'],
         'address': ['address', 'address_actual'],
         'relatives': ['relatives', 'relatives_actual'],
         'receipt_date': ['receipt_date', 'receipt_date_actual'],
