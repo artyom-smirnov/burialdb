@@ -1,3 +1,5 @@
 {% for cemetery in cemetery_list %}
-    <tr class="clickable-row" data-href="{% url 'cemetery_detail' cemetery.id %}" data-target="_blank"><td>{{ cemetery.name }}</td></tr>
+    <tr class="clickable-row" data-href="{% url 'cemetery_detail' cemetery.id %}" data-target="_blank">
+        <td>{{ cemetery.name }} <span class="badge badge-secondary">{{cemetery.person_total_count}}</span></td>
+    </tr>
 {% endfor %}

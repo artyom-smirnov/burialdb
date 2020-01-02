@@ -6,7 +6,7 @@ import hashlib
 from django.contrib.auth.decorators import login_required
 from django.core import paginator
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count, F
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
@@ -139,6 +139,15 @@ class CemeteriesListView(BaseListView):
     page_title = 'Мемориалы'
     navbar = 'burials'
 
+    def get_queryset(self):
+        q = super().get_queryset()
+        q = q.annotate(
+            person_count=Count('person_cemetery'),
+            person_actual_count=Count('person_cemetery_actual'),
+            person_total_count=F('person_count') + F('person_actual_count')
+        )
+        return q
+
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
             self.object_list = self.get_queryset()
@@ -148,7 +157,6 @@ class CemeteriesListView(BaseListView):
             return JsonResponse({"content": content})
         else:
             return super().get(request, args, kwargs)
-
 
 
 class CemeteryDetailView(DetailWithListView):
@@ -217,7 +225,11 @@ class HospitalsView(BaseListView):
     navbar = 'hospitals'
 
     def get_queryset(self):
-        return Hospital.objects.filter()
+        q = super().get_queryset()
+        q = q.annotate(
+            person_total_count=Count('person_hospital_actual')
+        )
+        return q
 
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
