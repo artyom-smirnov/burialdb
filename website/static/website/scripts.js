@@ -108,3 +108,18 @@ function initialize_search() {
     else
         advanced_search_off();
 }
+
+var return_button = $('#return-button');
+
+$(window).scroll(function() {
+  if ($(window).scrollTop() > 300) {
+    return_button.addClass('show');
+  } else {
+    return_button.removeClass('show');
+  }
+});
+
+return_button.on('click', function(e) {
+  e.preventDefault();
+  $('html, body').animate({scrollTop:0}, '300');
+});

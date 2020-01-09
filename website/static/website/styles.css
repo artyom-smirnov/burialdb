@@ -16,3 +16,37 @@
     padding-bottom: 1em;
     padding-left: 1em;
 }
+
+#return-button {
+    transition: background-color .3s, opacity .5s, visibility .5s;
+    opacity: 0;
+    visibility: hidden;
+    background-color: #007bff;
+    color: white;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 4px;
+}
+#return-button::after {
+  content: "\f062";
+  font-style: normal;
+  font-size: 2em;
+  text-rendering: auto;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 50px;
+  color: #fff;
+}
+#return-button:hover {
+    background-color: #0069d9;
+    cursor: pointer;
+}
+#return-button.show {
+    opacity: 1;
+    visibility: visible;
+}
