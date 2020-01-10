@@ -1,4 +1,7 @@
 from collections import OrderedDict
+import json
+import base64
+import hashlib
 
 from django.contrib.auth.decorators import login_required
 from django.core import paginator
@@ -7,19 +10,19 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import BaseDetailView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, FormView
 from django.views.generic.list import MultipleObjectMixin
 
 from website.forms import PersonCreateEditForm, ImportCreateForm, ImportEditForm, ImportDoForm, HospitalCreateEditForm, \
     CemeteryCreateEditForm, PersonSearchForm
 from website.importer import ImporterFactory
-from website.models import Person, Cemetery, Hospital, Import
+from website.models import Person, Cemetery, Hospital, Import, SearchData
 
 PAGINATE_BY = 50
 
@@ -46,6 +49,34 @@ class CommonViewMixin(ContextMixin):
 class CommonPaginatedViewMixin(MultipleObjectMixin, CommonViewMixin):
     paginate_by = PAGINATE_BY
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if not context.get('is_paginated', False):
+            return context
+
+        paginator = context.get('paginator')
+        num_pages = paginator.num_pages
+        current_page = context.get('page_obj')
+        page_no = current_page.number
+
+        if num_pages <= 11 or page_no <= 6:  # case 1 and 2
+            pages = [x for x in range(1, min(num_pages + 1, 12))]
+        elif page_no > num_pages - 6:  # case 4
+            pages = [x for x in range(num_pages - 10, num_pages + 1)]
+        else:  # case 3
+            pages = [x for x in range(page_no - 5, page_no + 6)]
+
+        context.update(
+            {
+                'pages': pages,
+                'page_no': page_no,
+                'num_pages': num_pages
+            }
+        )
+
+        return context
+
 
 class BaseListView(CommonPaginatedViewMixin, ListView):
     pass
@@ -58,21 +89,23 @@ class DetailWithListView(CommonPaginatedViewMixin, DetailView):
         return self.list_model.objects.all()
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
         queryset = self.get_list_queryset()
         objects_paginator, page, objects_list, has_other_pages = self.paginate_queryset(queryset, PAGINATE_BY)
 
-        context = {}
-        context['object'] = self.object
+        newcontext = {}
+        newcontext['object'] = self.object
         context_object_name = self.get_context_object_name(self.object)
         if context_object_name:
-            context[context_object_name] = self.object
-        context['page_obj'] = page
-        context['paginator'] = objects_paginator
-        context['is_paginated'] = True if objects_paginator.num_pages > 1 else False
-        context['list_obj'] = objects_list
+            newcontext[context_object_name] = self.object
+        newcontext['page_obj'] = page
+        newcontext['paginator'] = objects_paginator
+        newcontext['is_paginated'] = True if objects_paginator.num_pages > 1 else False
+        newcontext['list_obj'] = objects_list
 
-        context.update(kwargs)
-        return super().get_context_data(**context)
+        context.update(newcontext)
+        return context
 
 
 class CommonCreateEditView(CommonViewMixin, CreateView):
@@ -255,20 +288,31 @@ class HospitalDeleteView(CommonDeleteView):
         return 'Удаление госпиталя ' + super().get_object().name
 
 
-class PersonsView(BaseListView):
+class PersonsView(FormMixin, BaseListView):
     model = Person
     context_object_name = 'person_list'
     navbar = 'persons'
     page_title = 'Люди'
     form_class = PersonSearchForm
+    http_method_names = ['get', 'post']
+    search = None
+
+    def get_search(self):
+        if 'q' in self.request.GET:
+            if not self.search:
+                self.search = get_object_or_404(SearchData, id=self.request.GET['q'])
+        return self.search
 
     def get_queryset(self):
         form = self.form_class(self.request.GET)
         q = Person.objects.filter(active_import=None).order_by('screen_name')
-        if form.is_valid():
+        if 'q' in self.request.GET:
+            search = self.get_search()
+            fields = json.loads(search.fields)
+
             for k, v in Person.get_search_mapping().items():
-                if form.cleaned_data[k]:
-                    val = form.cleaned_data[k]
+                if k in fields:
+                    val = fields[k]
                     filter = Q()
                     for field in v:
                         if field == 'state' and val == '-1':
@@ -280,23 +324,44 @@ class PersonsView(BaseListView):
         return q
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        search = self.get_search()
+        initial = {}
+        if search:
+            initial = json.loads(search.fields)
+        form = self.form_class(initial=initial)
         context = super().get_context_data(**kwargs)
         context['have_imports'] = Import.objects.count() > 0
-        context['search_form'] = self.form_class(self.request.GET)
+        context['search_form'] = form
         context['show_cemetery'] = True
         context['total_count'] = self.get_queryset().count
         context['start_item_number'] = ((context['page_obj'].number - 1) * PAGINATE_BY) + 1
         return context
 
-    def get(self, request, *args, **kwargs):
-        if request.is_ajax():
-            self.object_list = self.get_queryset()
-            allow_empty = self.get_allow_empty()
-            context = self.get_context_data()
-            content = loader.render_to_string('website/snippets/person_list_rows.html', context, request)
-            return JsonResponse({"content": content})
-        else:
-            return super().get(request, args, kwargs)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+        if not form.is_valid():
+            return HttpResponseRedirect(reverse('persons'))
+
+        fields = {
+            'advanced_search': form.cleaned_data['advanced_search'],
+        }
+        for k, _ in Person.get_search_mapping().items():
+            if form.cleaned_data[k]:
+                val = form.cleaned_data[k]
+                fields[k] = val
+
+        fields = json.dumps(fields)
+        hash = hashlib.sha1()
+        hash.update(fields.encode('utf-8'))
+        hash = hash.digest()
+        try:
+            search = SearchData.objects.get(hash=hash)
+        except SearchData.DoesNotExist as e:
+            search = None
+        if not search:
+            search = SearchData.objects.create(hash=hash, fields=fields)
+        return HttpResponseRedirect('%s?q=%s' % (reverse_lazy('persons'), search.id))
+
 
 
 class PersonDetailView(CommonViewMixin, DetailView):

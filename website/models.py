@@ -482,3 +482,8 @@ class Person(models.Model):
         if self.fio_actual:
             self.fio_actual = self.fio_actual.title()
         super(Person, self).save(*args, **kwargs)
+
+
+class SearchData(models.Model):
+    hash = models.BinaryField(max_length=20, db_index=True)
+    fields = models.TextField()

@@ -226,8 +226,6 @@ class PersonSearchForm(forms.Form):
             self.fields[f[0]].label = f[2]
 
         self.helper = FormHelper()
-        self.helper.disable_csrf = True
-        self.helper.form_method = 'GET'
 
         self.helper.layout = Layout(
             Div(
