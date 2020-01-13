@@ -65,7 +65,7 @@ class PersonManager(models.Manager):
     def get_queryset(self):
         q = super(PersonManager, self).get_queryset()
 
-        q = q.annotate(
+        q = q.select_related('cemetery', 'cemetery_actual', 'hospital_actual').annotate(
             screen_name=Coalesce(
                 Case(
                     When(fio_actual__exact='', then=None),
