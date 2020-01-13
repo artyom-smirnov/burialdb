@@ -3,13 +3,13 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 
 [packages]
-django = "*"
+Django = "*"
 gunicorn = "*"
 requests = "*"
 django-crispy-forms = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
-django-recaptcha = "*"
+django-recaptcha3 = "*"
 chardet = "*"
 openpyxl = "*"
 

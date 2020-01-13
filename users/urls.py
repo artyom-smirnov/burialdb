@@ -8,5 +8,5 @@ use_captcha = settings.RECAPTCHA_ENABLED
 
 urlpatterns = [
     path('login/', ReCaptchaLoginView.as_view() if use_captcha else auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout'),
 ]
