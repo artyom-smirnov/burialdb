@@ -325,20 +325,17 @@ class PersonsView(FormMixin, BaseListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         search = self.get_search()
-        initial = {}
         if search:
-            initial = json.loads(search.fields)
-        form = self.form_class(initial=initial)
+            self.initial = json.loads(search.fields)
         context = super().get_context_data(**kwargs)
         context['have_imports'] = Import.objects.count() > 0
-        context['search_form'] = form
         context['show_cemetery'] = True
         context['total_count'] = self.get_queryset().count
         context['start_item_number'] = ((context['page_obj'].number - 1) * PAGINATE_BY) + 1
         return context
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
+        form = self.get_form()
         if not form.is_valid():
             return HttpResponseRedirect(reverse('persons'))
 
