@@ -166,7 +166,17 @@ LOGOUT_REDIRECT_URL = '/'
 
 ADMIN_ENABLED = False
 
+PROFILE = False
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 try:
     from burialdb.local_settings import *
 except ImportError:
     pass
+
+if PROFILE:
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE

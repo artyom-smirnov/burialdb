@@ -12,6 +12,7 @@ dj-database-url = "*"
 chardet = "*"
 openpyxl = "*"
 django-recaptcha = {editable = true,git = "https://github.com/robcharlwood/django-recaptcha",ref = "django3"}
+django-debug-toolbar = "*"
 
 [requires]
 python_version = "3"

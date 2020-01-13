@@ -13,3 +13,7 @@ urlpatterns = [
 
 if settings.ADMIN_ENABLED:
     urlpatterns.append(path('admin/', admin.site.urls)) 
+
+if settings.PROFILE:
+    import debug_toolbar
+    urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
