@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'crispy_forms',
-    'snowpenguin.django.recaptcha3'
+    'captcha'
 ]
 
 MIDDLEWARE = [

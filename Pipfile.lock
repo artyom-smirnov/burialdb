@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a4910d0268cfc1d2f94b3ceec6b7fc47eadf6658d496264ecbef51797e9f6ebe"
+            "sha256": "bddd11768b0823eb83e2116091e7af1419499e14d23b62e33860a322d40e6ddd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -57,12 +57,10 @@
             ],
             "version": "==1.8.1"
         },
-        "django-recaptcha3": {
-            "hashes": [
-                "sha256:9a3caacf61a4fdcdd2ceaed9c22fbb61ca7b57d650209b13e1f3d95b515a287d",
-                "sha256:e1bb863c504e33634e59899dca40303db0e8e54d9756d45ae3ef96de2cc9d3ec"
-            ],
-            "version": "==0.1.0"
+        "django-recaptcha": {
+            "editable": true,
+            "git": "https://github.com/robcharlwood/django-recaptcha",
+            "ref": "b685d945b56b73bb6be684c5b5a736f128ec8d1d"
         },
         "et-xmlfile": {
             "hashes": [
@@ -93,9 +91,9 @@
         },
         "openpyxl": {
             "hashes": [
-                "sha256:eb68c08a72ac6d9812df181e88ebece3a68436364353eb6eda3bed863e3d73a6"
+                "sha256:547a9fc6aafcf44abe358b89ed4438d077e9d92e4f182c87e2dc294186dc4b64"
             ],
-            "version": "==3.0.2"
+            "version": "==3.0.3"
         },
         "psycopg2-binary": {
             "hashes": [

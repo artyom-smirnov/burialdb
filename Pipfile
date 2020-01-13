@@ -9,9 +9,9 @@ requests = "*"
 django-crispy-forms = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
-django-recaptcha3 = "*"
 chardet = "*"
 openpyxl = "*"
+django-recaptcha = {editable = true,git = "https://github.com/robcharlwood/django-recaptcha",ref = "django3"}
 
 [requires]
 python_version = "3"
