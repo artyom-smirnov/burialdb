@@ -1,3 +1,3 @@
 {% for hospital in hospital_list %}
-<tr class="clickable-row" data-href="{% url 'hospital_detail' hospital.id %}"><td>{{ hospital.name }}</td></tr>
+<tr class="clickable-row" data-href="{% url 'hospital_detail' hospital.id %}" data-target="_blank"><td>{{ hospital.name }}</td></tr>
 {% endfor %}
