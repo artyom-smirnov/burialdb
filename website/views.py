@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import paginator
 from django.db import transaction
 from django.db.models import Q, Count, F
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse_lazy, reverse
@@ -206,6 +206,43 @@ class CemeteryEditView(CommonCreateEditView, UpdateView):
 
     def get_page_title(self):
         return 'Редактирование мемориала ' + super().get_object().name
+
+
+class CemeteryExportView(DetailView):
+    model = Cemetery
+
+    def get(self, request, *args, **kwargs):
+        persons = Person.objects.filter(cemetery=self.get_object())
+        print(persons)
+        def cond(f):
+           return f.attname in ('id', 'active_import_id', 'cemetery_id', 'cemetery_actual_id')
+        fields = [f.attname for f in Person._meta.fields if not cond(f)]
+        captions = [f.verbose_name for f in Person._meta.fields if not cond(f)]
+
+        from openpyxl import Workbook
+        wb = Workbook()
+        ws = wb.active
+
+        ws.append(captions)
+
+        for person in persons:
+            row = []
+            for f in fields:
+                val = getattr(person, f)
+                if f == 'state':
+                    val = person.screen_state()
+                row.append(val)
+            ws.append(row)
+
+        wb.save('/tmp/export.xlsx')
+
+        with open('/tmp/export.xlsx', 'rb') as f:
+            response = HttpResponse(
+                        f.read(),
+                        content_type=wb.mime_type
+                    )
+            response['Content-Disposition'] = 'inline; filename=' + 'export.xlsx'
+        return response
 
 
 class CemeteryDeleteView(CommonDeleteView):

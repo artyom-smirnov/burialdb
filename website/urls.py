@@ -11,6 +11,7 @@ urlpatterns = [
     path('burials/<int:pk>/', website_views.CemeteryDetailView.as_view(), name='cemetery_detail'),
     path('burials/<int:pk>/edit/', website_views.CemeteryEditView.as_view(), name='cemetery_edit'),
     path('burials/<int:pk>/delete/', website_views.CemeteryDeleteView.as_view(), name='cemetery_delete'),
+    path('burials/<int:pk>/export/', website_views.CemeteryExportView.as_view(), name='cemetery_export'),
     path('persons/', website_views.PersonsView.as_view(), name='persons'),
     path('persons/create/', website_views.PersonCreateView.as_view(), name='person_create'),
     path('persons/import/', website_views.ImportsListView.as_view(), name='import_list'),

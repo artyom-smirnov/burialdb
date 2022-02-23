@@ -6,6 +6,7 @@
             <div><h3 class="d-inline-block">{{ cemetery.name }}</h3></div>
             <div>
                 <a class="mr-4" href="{% url 'cemetery_edit' cemetery.id %}" data-toggle="tooltip" data-placement="bottom" title="Редактировать"><i class="fa fa-2x fa-edit text-info"></i></a>
+                <a class="mr-4" href="{% url 'cemetery_export' cemetery.id %}" data-toggle="tooltip" data-placement="bottom" title="Экспорт"><i class="fa fa-2x fa-download text-info"></i></a>
                 <a href="{% url 'cemetery_delete' cemetery.id %}" data-toggle="tooltip" data-placement="bottom" title="Удалить"><i class="fa fa-2x fa-trash text-danger"></i></a>
             </div>
         </div>
