@@ -215,7 +215,8 @@ class CemeteryExportView(DetailView):
         persons = Person.objects.filter(cemetery=self.get_object())
         print(persons)
         def cond(f):
-           return f.attname in ('id', 'active_import_id', 'cemetery_id', 'cemetery_actual_id')
+           return f.attname in ('id', 'active_import_id', 'cemetery_id', 'cemetery_actual_id') \
+                  or f.attname.endswith('_actual')
         fields = [f.attname for f in Person._meta.fields if not cond(f)]
         captions = [f.verbose_name for f in Person._meta.fields if not cond(f)]
 
