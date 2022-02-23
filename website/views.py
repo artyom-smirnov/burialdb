@@ -2,6 +2,7 @@ from collections import OrderedDict
 import json
 import base64
 import hashlib
+import urllib
 
 from django.contrib.auth.decorators import login_required
 from django.core import paginator
@@ -212,8 +213,9 @@ class CemeteryExportView(DetailView):
     model = Cemetery
 
     def get(self, request, *args, **kwargs):
-        persons = Person.objects.filter(cemetery=self.get_object())
-        print(persons)
+        self.object = self.get_object()
+        persons = Person.objects.filter(cemetery=self.object)
+
         def cond(f):
            return f.attname in ('id', 'active_import_id', 'cemetery_id', 'cemetery_actual_id') \
                   or f.attname.endswith('_actual')
@@ -236,13 +238,14 @@ class CemeteryExportView(DetailView):
             ws.append(row)
 
         wb.save('/tmp/export.xlsx')
+        encoded_filename = urllib.parse.quote(self.object.name, encoding='utf-8')
 
         with open('/tmp/export.xlsx', 'rb') as f:
             response = HttpResponse(
                         f.read(),
                         content_type=wb.mime_type
                     )
-            response['Content-Disposition'] = 'inline; filename=' + 'export.xlsx'
+            response['Content-Disposition'] = 'attachment; filename*=UTF8\'\'%s.xlsx' % encoded_filename
         return response
 
 
